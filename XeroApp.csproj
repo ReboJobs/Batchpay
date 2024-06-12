@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-XeroApp-26E43A4E-F596-4AD5-90C5-6F114F99802B</UserSecretsId>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Utilities\ExceptionMiddleware.cs" />
+    <Compile Remove="Utilities\ExceptionMiddlewareExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Shared\Error.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="FileHelpers" Version="3.5.2" />
+    <PackageReference Include="IronPdf" Version="2022.2.4887" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" NoWarn="NU1605" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" NoWarn="NU1605" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.16.0" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.16.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
+    <PackageReference Include="Select.HtmlToPdf.NetCore" Version="22.1.0" />
+    <PackageReference Include="SendGrid" Version="9.28.0" />
+    <PackageReference Include="Spire.PDF" Version="8.7.2" />
+    <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="19.3.0.57" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+    <PackageReference Include="Xero.NetStandard.OAuth2" Version="3.26.0" />
+    <PackageReference Include="Xero.NetStandard.OAuth2Client" Version="1.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Accounts\Accounts.Config\Accounts.Config.csproj" />
+    <ProjectReference Include="..\Core\Core.Models\Core.Models.csproj" />
+    <ProjectReference Include="..\Persistence\Persistence.Config\Persistence.Config.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="GeneratedFiles\BatchPaymentReport\" />
+    <Folder Include="GeneratedFiles\RemittanceAdvice\" />
+    <Folder Include="Services\IdeaService\" />
+    <Folder Include="Views\SubmitIdea\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+</Project>
