@@ -1,0 +1,41 @@
+﻿@{
+
+     var asyncSettings = new Syncfusion.EJ2.Inputs.UploaderAsyncSettings { SaveUrl = @Url.Content("~/ReportBug/Save"), RemoveUrl = @Url.Content("~/Uploader/Remove") };
+}
+
+    <br />
+    <div class="ms-5 mt-5">
+
+        <div class="col-lg-12 control-section">
+          <div class="row">
+            <div class="col-4">
+                 <ejs-textbox id="Tenant" Placeholder='Search by Tenant' floatLabelType="Auto"></ejs-textbox>
+            </div>
+            <div class="col-md-auto mt-3">
+               <ejs-button id="btnSearch" content="Search" isPrimary="true"  cssClass="e-info"></ejs-button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 control-section" style="margin-top:1%;">
+             <div class="content-wrapper" style="z-index:-1; position:absolute">
+                <div class="row">
+                    <ejs-grid id="listApiLogs" height="300" Width="auto" allowSelection="true" allowPaging="true" allowSorting="true" allowFiltering="true" allowResizing="true">
+                        <e-grid-columns>
+                            <e-grid-column field="id" headerText="ID"  Width="50" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="createDateUTC" headerText="Create Date UTC" width="100" Format="dd/MM/yyyy hh:mm:ss tt" TextAlign="Center" width="100" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="status" headerText="Status" width="70" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="tenantType" headerText="Type" width="90" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="tenantId" headerText="TenantID" width="100" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="tenantName" headerText="TenantName" width="100" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="url" headerText="URL" width="300" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="method" headerText="Method" width="60" allowEditing="false"></e-grid-column>
+                        </e-grid-columns>
+                    </ejs-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script type="text/javascript" src="~/js/ApiLogs.js"></script>
+
+    

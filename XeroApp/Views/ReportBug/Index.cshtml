@@ -1,0 +1,725 @@
+﻿@{
+
+    List<object> Toolbaritems = new List<Object>();
+    Toolbaritems.Add(new { text = "Update", tooltipText = "Update Bugs", prefixIcon = "e-update", id = "Update" });
+    Toolbaritems.Add(new { text = "Delete", tooltipText = "Delete Bugs", prefixIcon = "e-delete", id = "Delete" });
+
+     var asyncSettings = new Syncfusion.EJ2.Inputs.UploaderAsyncSettings { SaveUrl = @Url.Content("~/ReportBug/Save"), RemoveUrl = @Url.Content("~/Uploader/Remove") };
+}
+
+    <br />
+    <div class="ms-5 mt-5">
+
+        <div class="col-lg-12 control-section">
+          <div class="row">
+            <div class="col-4">
+                 <ejs-textbox id="Title" Placeholder='Title, Description' floatLabelType="Auto"></ejs-textbox>
+            </div>
+            <div class="col-md-auto">
+                <div style="margin-top:11.5%;">
+                    <ejs-dropdownlist id="reportStatusData"  placeholder="Select a status" index="0" popupHeight="220px">
+                        <e-dropdownlist-fields text="Status" value="Id"></e-dropdownlist-fields>
+                    </ejs-dropdownlist>
+                </div>
+            </div>
+          </div>
+           <div class="row" style="margin-top:1%">
+            <div class="col-2">
+                <ejs-datepicker id="dateFrom" placeholder="Date From"></ejs-datepicker>   
+            </div>
+            <div class="col-2">
+                <ejs-datepicker id="dateTo" placeholder="Date To"></ejs-datepicker>  
+            </div>
+            <div class="col-md-auto">
+               <ejs-button id="btnSearch" content="Search" isPrimary="true"  cssClass="e-info"></ejs-button>
+            </div>
+            <div class="col-5">
+               
+            </div>
+            <div class="col-2">
+                <ejs-button id="btnAdd" content="Add" isPrimary="true"  cssClass="e-info"></ejs-button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 control-section" style="margin-top:1%;">
+             <div class="content-wrapper" style="z-index:-1; position:absolute">
+                <div class="row">
+                    <ejs-grid id="listReportBugs" height="200" Width="auto"  rowSelected="rowSelected" toolbar="Toolbaritems" toolbarClick="toolbarClick" toolbar="toolbar" allowSelection="true" allowPaging="true" allowSorting="true" allowFiltering="true" allowResizing="true">
+                        <e-grid-columns>
+                            <e-grid-column field="id" headerText="ID"  Width="100" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="title" headerText="Title" width="110" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="reportedBy" headerText="Reported By" width="100" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="dateReported" headerText="Reported Date"  Format="dd/MM/yyyy hh:mm:ss tt" TextAlign="Center" width="100" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="reportBugStatusName" headerText="Status" width="60" allowEditing="false"></e-grid-column>
+                        </e-grid-columns>
+                    </ejs-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="dialogContainerForReportBugs">
+        <ejs-dialog id='dialogReportBugs' isModal="true" width="800px" height="400px" visible="false"
+                    header="<div class='dlg-template e-icon-settings'>Report a Bug</div>"
+                    showCloseIcon="true" created="modalCreated"
+                    target="#dialogContainerForReportBugs"
+                    footerTemplate="<button class='e-btn e-primary' id='btnSubmit'>Submit</button><button class='e-btn' id='btnCancel'>Close</button>">
+            <e-content-template>
+
+                    <div class="form-group d-flex mb-2">
+                        <label class="col-2" for="name">Title</label>
+                        <input type="text" class="form-control" id="bugtitle" placeholder="Title">
+                     </div>
+
+                     <div class="form-group d-flex mb-2">
+                        <label class="col-2" for="name">Status</label>
+                          <div class="dropdown w-50">
+                            <button type="button" id="statusID" class="btn btn-primary dropdown-toggle w-50" data-bs-toggle="dropdown">
+                              Open
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                              <li><a class="dropdown-item" href="#" data-value="Open">Open</a></li>
+                              <li><a class="dropdown-item" href="#" data-value="In-Progress">In-Progress</a></li>
+                              <li><a class="dropdown-item" href="#" data-value="Resolved">Resolved</a></li>
+                            </ul>
+                          </div>
+                     </div>
+                 
+                     <div class="form-group d-flex">
+                          <div class="d-inline-flex flex-column w-100">
+                               <label class="col-2"  for="name">Description</label>
+                               <textarea class="form-control mb-3" id="description" rows="3"></textarea>
+                                <input class="mb-3" type="file"name="file" id="file" />
+                                <button class="btn btn-primary w-25" onclick="uploadFile()">
+                                    Upload Image
+                                </button>
+                           </div>
+                     </div>
+
+            </e-content-template>
+        </ejs-dialog>
+    </div>
+
+    <div id="promptContainerError">
+    <ejs-dialog id='promptError' isModal="true" width="400px" visible="false"
+                header="<div class='dlg-template e-icon-settings'>Report Bug Prompt</div>"
+                showCloseIcon="true" created="modalCreated"
+                target="#promptContainerError"
+                footerTemplate="<button class='e-btn e-primary' id='btnOK'>OK</button>">
+            <e-content-template>
+               <p id="prompt"></p>
+             </e-content-template>
+        </ejs-dialog>
+    </div>
+
+    <div id="promptContainerForReportBugs">
+        <ejs-dialog id='promptDialogReportBugs' isModal="true" width="400px" visible="false"
+                    header="<div class='dlg-template e-icon-settings'>Delete Reported Bug</div>"
+                    showCloseIcon="true" created="modalCreated"
+                    target="#promptContainerForReportBugs"
+                    footerTemplate="<button class='e-btn e-primary' id='btnOkay'>Yes</button><button class='e-btn' id='btnCancelDel'>No</button>">
+            <e-content-template>
+                <p>Do you want to delete the reported bug?</p>
+            </e-content-template>
+        </ejs-dialog>
+    </div>
+
+
+    <script type="text/javascript">
+
+        var dialogObj;
+        var gridGlobal;
+        var selectedRecords;
+        var reportbugid;
+        var reportTitle;
+        var reportDescription;
+        var reportStatus;
+        var inputElement;
+
+        function onFileRemove(args) {
+            args.postRawFile = false;
+        }
+
+        function onFileSelect(args) {
+            inputElement  = args.filesData;
+        }
+
+        function uploadFile() {
+           var files = document.getElementById('file').files;// $('#file').files[0];// e.target.files;
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file" + x, files[x]);
+                        //data.append(base64String, base64String);
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: '/ReportBug/UploadImage',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (result) {
+                            var dialogError = document.getElementById("promptError").ej2_instances[0];
+                            document.getElementById("prompt").innerHTML = result;
+                            dialogError.show()
+
+                            document.getElementById("btnOK").onclick = function (e) {
+                                dialogError.hide()
+                            }
+                        },
+                        error: function (xhr, status, p3, p4) {
+                            alert('Something is going to wrong please try agan!'); 
+                        }
+                    });
+                } else {
+                    alert("Upgrade your browser!");
+                }
+            }
+        };
+        
+
+        function rowSelected(args){ 
+           gridGlobal = document.getElementById("listReportBugs").ej2_instances[0]
+           selectedRecords = gridGlobal.getSelectedRecords();
+           reportbugid = selectedRecords[0].id;
+           reportTitle = selectedRecords[0].title;
+           reportDescription = selectedRecords[0].description;
+           reportStatus = selectedRecords[0].reportBugStatusName;
+        } 
+
+        function modalCreated() {
+            dialogObj = this;
+            dialogObj.hide();
+        }
+
+        function toolbarClick (args) {
+                
+            if (args.item.id === "Update") {
+
+                if (typeof reportbugid == 'undefined' || reportbugid == ''){
+                    var dialogError = document.getElementById("promptError").ej2_instances[0];
+                    var result = "Please select a record in the grid"
+                    document.getElementById("prompt").innerHTML = result;
+                    dialogError.show()
+
+                    document.getElementById("btnOK").onclick = function (e) {
+                        dialogError.hide()
+                        return
+                    }
+                } else {
+                    var dialog = document.getElementById("dialogReportBugs").ej2_instances[0]
+                    document.getElementById("statusID").innerText = reportStatus;
+                    document.getElementById("bugtitle").value = reportTitle;
+                    document.getElementById("description").value = reportDescription;
+
+                    dialog.show()
+
+                    $("button.e-dlg-closeicon-btn.e-control.e-btn.e-lib.e-flat.e-icon-btn").click(function() {
+                        document.getElementById("statusID").innerText = "Open";
+                        document.getElementById("bugtitle").value = "";
+                        document.getElementById("description").value = "";
+                    });
+
+                    document.getElementById("btnCancel").onclick = function (e) {
+                        dialog.hide()
+                        document.getElementById("statusID").innerText = "Open";
+                        document.getElementById("bugtitle").value = "";
+                        document.getElementById("description").value = "";
+                    }
+
+                    $(".dropdown-menu li a").click(function(){
+                      $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+                      $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+                    });
+
+                    
+                    document.getElementById("btnSubmit").onclick = function (e) {
+
+                        let bugtitle = document.getElementById("bugtitle").value;
+                        let status = document.getElementById("statusID").innerText;
+                        let description = document.getElementById("description").value;
+                        var statusID = 0;
+
+                        switch(status.trim()) {
+                          case 'Open':
+                            statusID = 1;
+                            break;
+                          case 'In-Progress':
+                            statusID = 2;
+                            break;
+                          case 'Resolved':
+                            statusID = 3;
+                            break;
+                        }
+
+                        let bugObject = {
+                                    Title: bugtitle,
+                                    ReportBugStatus : statusID,
+                                    Description: description,
+                                    Id: reportbugid
+                                }
+
+                        $.ajax({
+                            url: '/ReportBug/SubmitBug',
+                            type: 'POST',
+                            data: JSON.stringify(bugObject),
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8',
+                                'Accept': 'application/json; charset=utf-8'
+                            },
+                            success: (result) => {
+
+                                dialog.hide()
+
+                                let grid = document.getElementById("listReportBugs").ej2_instances[0]
+
+
+                                var dateFromInit = new Date();
+                                dateFromInit.setDate(dateFromInit.getDate()-30);
+
+                                var dateToInit = new Date();
+                                dateToInit.setDate(dateToInit.getDate());
+
+                                var title = document.getElementById("Title").ej2_instances[0];
+                                var reportstatus = document.getElementById("reportStatusData").ej2_instances[0];
+                                var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+                                var dateTo = document.getElementById("dateTo").ej2_instances[0];
+            
+                                title.value = title.value ==  null ? "" : title.value;
+                                dateFrom.value = dateFrom.value ==  null ? dateFromInit : dateFrom.value;
+                                dateTo.value = dateTo.value ==  null ? dateToInit : dateTo.value;
+                                reportstatus.value = reportstatus.value == null ?  "Open" : reportstatus.value;
+
+                                var statusID;
+
+                                switch(reportstatus.value) {
+                                  case 'Open':
+                                    statusID = 1;
+                                    break;
+                                  case 'In-Progress':
+                                    statusID = 2;
+                                    break;
+                                  case 'Resolved':
+                                    statusID = 3;
+                                    break;
+                                }
+
+                                let reportBugSearch = {
+                                    DateFrom: dateFrom.value,
+                                    DateTo: dateTo.value,
+                                    ReportBugStatus:statusID,
+                                    Title:title.value,
+                                }
+
+                                grid.showSpinner()
+
+                                var ajax = new ej.base.Ajax({
+                                    url: '/ReportBug/GetReportBugs',
+                                    type: 'POST',
+                                    data: JSON.stringify(reportBugSearch),
+                                    contentType: 'application/json',
+                                    accept: 'application/json'
+                                })
+                                ajax.send()
+                                ajax.onSuccess = function (data) {
+                                    grid.dataSource = JSON.parse(data)
+                                    grid.hideSpinner();
+                                    document.getElementById("statusID").innerText = "Open";
+                                    document.getElementById("bugtitle").value = "";
+                                    document.getElementById("description").value = "";
+                                    reportbugid = "";
+
+                                }
+
+
+                            },
+                            error: (error) => {
+                                alert("error");
+                            }
+                        })
+                    }
+                
+                }
+   
+            }
+
+            if (args.item.id === "Delete") {
+
+                if (typeof reportbugid == 'undefined' || reportbugid == ''){
+                    var dialogError = document.getElementById("promptError").ej2_instances[0];
+                    var result = "Please select a record in the grid"
+                    document.getElementById("prompt").innerHTML = result;
+                    dialogError.show()
+
+                    document.getElementById("btnOK").onclick = function (e) {
+                        dialogError.hide()
+                        return
+                    }
+                } else {
+
+                    var dialog = document.getElementById("promptDialogReportBugs").ej2_instances[0]
+                    var dlgHeader = document.getElementById("promptDialogReportBugs_dialog-header")
+                    var dlgContent = document.getElementById("promptDialogReportBugs_dialog-content")
+
+                    dlgHeader.classList.add("error-dlg-header-template")
+                    dlgContent.classList.add("dlg-content-template")
+
+                    dialog.show()
+                    gridGlobal.hideSpinner()
+
+                    document.getElementById("btnOkay").onclick = function(e) {
+
+                        $.ajax({
+                            url: '/ReportBug/DeleteBug',
+                            type: 'POST',
+                            data:  {ReportBugID: reportbugid}, 
+                            success: (result) => {
+                        
+                                if (result.success) {
+
+                                    var dateFromInit = new Date();
+                                    dateFromInit.setDate(dateFromInit.getDate()-30);
+
+                                    var dateToInit = new Date();
+                                    dateToInit.setDate(dateToInit.getDate());
+
+                        
+                                    var title = document.getElementById("Title").ej2_instances[0];
+                                    var reportstatus = document.getElementById("reportStatusData").ej2_instances[0];
+                                    var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+                                    var dateTo = document.getElementById("dateTo").ej2_instances[0];
+            
+                                    title.value = title.value ==  null ? "" : title.value;
+                                    dateFrom.value = dateFrom.value ==  null ? dateFromInit : dateFrom.value;
+                                    dateTo.value = dateTo.value ==  null ? dateToInit : dateTo.value;
+                                    reportstatus.value = reportstatus.value == null ?  "Open" : reportstatus.value;
+
+                                    var statusID;
+
+                                    switch(reportstatus.value) {
+                                        case 'Open':
+                                        statusID = 1;
+                                        break;
+                                        case 'In-Progress':
+                                        statusID = 2;
+                                        break;
+                                        case 'Resolved':
+                                        statusID = 3;
+                                        break;
+                                    }
+
+                                    let reportBugSearch = {
+                                        DateFrom: dateFrom.value,
+                                        DateTo: dateTo.value,
+                                        ReportBugStatus:statusID,
+                                        Title:title.value,
+                                    }
+
+                                    gridGlobal.showSpinner()
+
+                                    var ajax = new ej.base.Ajax({
+                                        url: '/ReportBug/GetReportBugs',
+                                        type: 'POST',
+                                        data: JSON.stringify(reportBugSearch),
+                                        contentType: 'application/json',
+                                        accept: 'application/json'
+                                    })
+                                    ajax.send()
+                                    ajax.onSuccess = function (data) {
+                                        gridGlobal.dataSource = JSON.parse(data)
+                                        gridGlobal.hideSpinner();
+                                        dialog.hide();
+                                        reportbugid = "";
+                                    }
+                                } else {
+                                    //alert(result.responseText);
+                                }  
+                            },
+                            error: (error) => {
+                                alert("error");
+                            }
+                        })
+                    }
+
+                    document.getElementById("btnCancelDel").onclick = function(e) {
+                        dialog.hide();
+                        gridGlobal.hideSpinner;
+                    }
+                
+                
+                
+                }
+
+            }
+
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            
+            let statusData = [
+                { Id: 1, Status: 'Open' },
+                { Id: 2, Status: 'In-Progress' },
+                { Id: 3, Status: 'Resolved' },
+            ];
+
+            var listObj = document.getElementById('reportStatusData').ej2_instances[0];
+
+            statusID
+            listObj.dataSource = statusData;
+            document.getElementById('reportStatusData').ej2_instances[0].value = 'Open';
+
+            InitializeGrid();
+
+        })
+
+        function InitializeGrid() {
+
+            let grid = document.getElementById("listReportBugs").ej2_instances[0]
+
+            var dateFromInit = new Date();
+            dateFromInit.setDate(dateFromInit.getDate()-30);
+
+            var dateToInit = new Date();
+            dateToInit.setDate(dateToInit.getDate());
+
+            
+            var title = document.getElementById("Title").ej2_instances[0];
+            var reportstatus = document.getElementById("reportStatusData").ej2_instances[0];
+            var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+            var dateTo = document.getElementById("dateTo").ej2_instances[0];
+
+            
+            title.value = title.value ==  null ? "" : title.value;
+            dateFrom.value = dateFrom.value ==  null ? dateFromInit : dateFrom.value;
+            dateTo.value = dateTo.value ==  null ? dateToInit : dateTo.value;
+            reportstatus.value = reportstatus.value == null ?  "Open" : reportstatus.value;
+
+
+            switch(reportstatus.value) {
+                    case 'Open':
+                    statusID = 1;
+                    break;
+                    case 'In-Progress':
+                    statusID = 2;
+                    break;
+                    case 'Resolved':
+                    statusID = 3;
+                    break;
+                }
+
+            let reportBugSearch = {
+                DateFrom: dateFrom.value,
+                DateTo: dateTo.value,
+                ReportBugStatus:statusID,
+                Title:title.value,
+            }
+
+            grid.showSpinner()
+
+            var ajax = new ej.base.Ajax({
+                url: '/ReportBug/GetReportBugs',
+                type: 'POST',
+                data: JSON.stringify(reportBugSearch),
+                contentType: 'application/json',
+                accept: 'application/json'
+            })
+            ajax.send()
+            ajax.onSuccess = function (data) {
+                grid.dataSource = JSON.parse(data)
+                grid.hideSpinner();
+            }
+
+        }
+
+        document.getElementById("btnSearch").addEventListener('click', function () {
+
+            let grid = document.getElementById("listReportBugs").ej2_instances[0]
+
+            var title = document.getElementById("Title").ej2_instances[0];
+            var reportstatus = document.getElementById("reportStatusData").ej2_instances[0];
+            var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+            var dateTo = document.getElementById("dateTo").ej2_instances[0];
+
+
+            title.value = title.value ==  null ? "" : title.value;
+            reportstatus.value = reportstatus.value == null ?  1 :  reportstatus.value;
+
+
+            let reportBugSearch = {
+                DateFrom: dateFrom.value,
+                DateTo: dateTo.value,
+                ReportBugStatus:reportstatus.value,
+                Title:title.value,
+            }
+
+            grid.showSpinner()
+
+            var ajax = new ej.base.Ajax({
+                url: '/ReportBug/GetReportBugs',
+                type: 'POST',
+                data: JSON.stringify(reportBugSearch),
+                contentType: 'application/json',
+                accept: 'application/json'
+            })
+            ajax.send()
+            ajax.onSuccess = function (data) {
+                grid.dataSource = JSON.parse(data)
+                grid.hideSpinner();
+            }
+
+
+        });
+
+         document.getElementById("btnAdd").addEventListener('click', function () {
+ 
+            var dialog = document.getElementById("dialogReportBugs").ej2_instances[0]
+             document.getElementById("statusID").innerHTML = "Open";
+
+            dialog.show()
+
+            $("button.e-dlg-closeicon-btn.e-control.e-btn.e-lib.e-flat.e-icon-btn").click(function() {
+                document.getElementById("statusID").innerText = "Open";
+                document.getElementById("bugtitle").value = "";
+                document.getElementById("description").value = "";
+            });
+
+            document.getElementById("btnCancel").onclick = function (e) {
+                dialog.hide()
+                document.getElementById("statusID").innerText = "Open";
+                document.getElementById("bugtitle").value = "";
+                document.getElementById("description").value = "";
+            }
+
+            document.getElementById("btnSubmit").onclick = function (e) {
+
+                let bugtitle = document.getElementById("bugtitle").value;
+                let status = document.getElementById("statusID").innerText;
+                let description = document.getElementById("description").value;
+                var statusID = 0;
+
+                var uploadObj = document.getElementById("UploadFiles")
+
+                switch(status.trim()) {
+                  case 'Open':
+                    statusID = 1;
+                    break;
+                  case 'In-Progress':
+                    statusID = 2;
+                    break;
+                  case 'Resolved':
+                    statusID = 3;
+                    break;
+                }
+
+                let bugObject = {
+                            Title: bugtitle,
+                            ReportBugStatus : statusID,
+                            Description: description 
+                        }
+                
+                $.ajax({
+                    url: '/ReportBug/SubmitBug',
+                    type: 'POST',
+                    data: JSON.stringify(bugObject),
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8',
+                        'Accept': 'application/json; charset=utf-8'
+                    },
+                    success: (result) => {
+
+                        dialog.hide()
+
+                        let grid = document.getElementById("listReportBugs").ej2_instances[0]
+
+                        var dateFromInit = new Date();
+                        dateFromInit.setDate(dateFromInit.getDate()-30);
+
+                        var dateToInit = new Date();
+                        dateToInit.setDate(dateToInit.getDate());
+
+                        
+                        var title = document.getElementById("Title").ej2_instances[0];
+                        var reportstatus = document.getElementById("reportStatusData").ej2_instances[0];
+                        var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+                        var dateTo = document.getElementById("dateTo").ej2_instances[0];
+            
+                        title.value = title.value ==  null ? "" : title.value;
+                        dateFrom.value = dateFrom.value ==  null ? dateFromInit : dateFrom.value;
+                        dateTo.value = dateTo.value ==  null ? dateToInit : dateTo.value;
+                        reportstatus.value = reportstatus.value == null ?  "Open" : reportstatus.value;
+
+                        var statusID;
+
+                        switch(reportstatus.value) {
+                            case 'Open':
+                            statusID = 1;
+                            break;
+                            case 'In-Progress':
+                            statusID = 2;
+                            break;
+                            case 'Resolved':
+                            statusID = 3;
+                            break;
+                        }
+
+                        let reportBugSearch = {
+                            DateFrom: dateFrom.value,
+                            DateTo: dateTo.value,
+                            ReportBugStatus:statusID,
+                            Title:title.value,
+                        }
+
+                        grid.showSpinner()
+
+                        var ajax = new ej.base.Ajax({
+                            url: '/ReportBug/GetReportBugs',
+                            type: 'POST',
+                            data: JSON.stringify(reportBugSearch),
+                            contentType: 'application/json',
+                            accept: 'application/json'
+                        })
+                        ajax.send()
+                        ajax.onSuccess = function (data) {
+                            grid.dataSource = JSON.parse(data)
+                            grid.hideSpinner();
+                        }
+
+
+                    },
+                    error: (error) => {
+                        alert("error");
+                    }
+                })
+            }
+
+            $(".dropdown-menu li a").click(function(){
+              $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+              $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+            });
+
+        });
+
+     
+
+
+    </script>
+
+    <style>
+
+        .e-grid .e-gridcontent { /* grid content color*/
+           margin-top: 0px;
+        }
+
+        .e-icon-settings {
+            color: gray;
+        }
+    </style>
+        
+
+
+
+ 

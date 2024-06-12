@@ -1,0 +1,80 @@
+﻿@model ErrorDisplayViewModel
+@{
+    ViewData["Title"] = "ErrorDisplay";
+}
+
+@*<h5>@Model.exceptionPath</h5>
+<h5>@Model.exceptionMessage</h5>
+<h5>@Model.stacktrace</h5>*@
+
+
+
+<div style="background-color:white; margin-top:80px;">
+    <div class="ms-5 mt-5">
+        <div class="col-lg-12 control-section">
+            <div class="row">
+                <div class="col-4">
+                </div>
+                <div class="col-md-auto">
+                    <div style="margin-top:11.5%;">
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top:1%">
+                <div class="col-6">
+                    <b>Error encountered...</b><br/>
+                    <p>Sorry for the inconvenience. This will be automatically sent to the support team.</p>
+                    <b>Error details:</b><br/>
+                    @*   <ejs-datepicker id="dateTransaction" placeholder="Transaction Date" format="dd/MM/yyyy" min="minDate"></ejs-datepicker>*@
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col-md-auto">
+                </div>
+                <div class="col-3">
+                </div>
+                <div class="col-4">
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 control-section" style="margin-top:1%;">
+            <div class="content-wrapper">
+                <div class="row">
+                <div class="col-1">
+                    Error Path :
+                </div>
+                <div class="col-10">
+                     <input asp-for="@Model.exceptionPath" class="form-control mb-3"  readonly/>  
+                </div>
+                </div>
+                <div class="row">
+                <div class="col-1">
+                    Error Message:
+                </div>
+                <div class="col-10">
+                    <textarea asp-for="@Model.exceptionMessage" class="form-control mb-3" readonly></textarea>
+                </div>
+                </div>
+                 <div class="row">
+                <div class="col-1">
+                    Stack Trace :
+                </div>
+                <div class="col-10">
+                    <textarea asp-for="@Model.stacktrace" class="form-control mb-3"  style="height: 400px;" readonly ></textarea>
+                </div>
+                </div>
+                 <div class="row">
+                <div class="col-1">
+                
+                </div>
+                <div class="col-10">
+                @*    <button class='e-btn e-primary' id='btnSubmit'>Okay</button>*@
+                    <a asp-controller="Xero" asp-action="BatchPayments" class="e-btn e-primary">Click here to continue</a>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 control-section" style="margin-left:6rem !important;">
+    </div>
+</div>

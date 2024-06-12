@@ -1,0 +1,126 @@
+﻿@{
+    ViewData["Title"] = "OrganisationSettings";
+}
+
+<div style="background-color:white; margin-top:80px;">
+    <div class="ms-5 mt-5">
+        <div class="col-lg-12 control-section">
+            <div class="row">
+                <div class="col-4">
+                </div>
+                <div class="col-md-auto">
+                    <div style="margin-top:11.5%;">
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top:1%">
+                <div class="col-2">
+                    <b>Organisation Settings</b>
+                    @*   <ejs-datepicker id="dateTransaction" placeholder="Transaction Date" format="dd/MM/yyyy" min="minDate"></ejs-datepicker>*@
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col-md-auto">
+                </div>
+                <div class="col-3">
+                </div>
+                <div class="col-4">
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 control-section" style="margin-top:1%;">
+            <div class="content-wrapper">
+                <div class="row">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 control-section" style="margin-left:6rem !important;">
+        <ejs-grid id="Grid" load="onGridLoad" toolbar="@(new List<string>() { "Edit", "Update", "Cancel" })" allowPaging="true" actionBegin="actionBegin">
+            <e-grid-editSettings allowAdding="false" allowDeleting="false" allowEditing="true" newRowPosition="Top"></e-grid-editSettings>
+            <e-grid-pagesettings pageCount="5"></e-grid-pagesettings>
+            <e-grid-columns>
+                <e-grid-column field="id" headerText="Tenant Id" isPrimaryKey="true" AllowEditing="false" validationRules="@(new { required=true, number=true})" width="140"></e-grid-column>
+                <e-grid-column field="xeroTenantUniqueId" AllowEditing="false" headerText="XeroTenantUniqueId" contenteditable="false" validationRules="@(new { required=true})" width="150"></e-grid-column>
+                <e-grid-column field="name" headerText="Name" AllowEditing="false" contenteditable="false" validationRules="@(new { required=true})" width="150"></e-grid-column>
+                <e-grid-column field="email" headerText="Email" validationRules="@(new { required=true})" width="150"></e-grid-column>
+                             <e-grid-column field="status" headerText="Connection Status" AllowEditing="false" contenteditable="false" validationRules="@(new { required=true})" width="150"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+</div>
+
+    <script type="text/javascript">
+
+
+        function onGridLoad(args) { 
+  
+            var tenantIDValue = $('#orgSelector').find(':selected').attr('data-id');
+            var grid = document.getElementById("Grid").ej2_instances[0]
+            grid.showSpinner()
+
+            var ajax = new ej.base.Ajax({
+                url: '/OrganisationInfo/GetOrganisationDetails/' + tenantIDValue,
+                type: 'GET',
+                //data: JSON.stringify(payload),
+                contentType: 'application/json',
+                accept: 'application/json'
+            })
+            ajax.send()
+            ajax.onSuccess = function(data) {
+                //var response = JSON.parse(data)
+                //console.log(data);
+                grid.dataSource = JSON.parse(data)
+                grid.hideSpinner()
+               
+            }
+        }
+
+
+        function rowPositionChange(args) {
+            var grid = document.getElementById("Grid").ej2_instances[0];
+            grid.editSettings.newRowPosition = this.value;
+        }
+
+        function actionBegin(args) {
+            var grid = document.getElementById("Grid").ej2_instances[0];
+            if (args.requestType === 'save') {
+
+                let payload = args.data;
+
+                $.ajax({
+                    url:  '@Url.Action("UpdateOrganisationSettings" , "OrganisationInfo")',
+                    type: 'POST',
+                     data: JSON.stringify(args.data),
+                    headers: {
+                       'Content-Type': 'application/json; charset=utf-8',
+                       'Accept': 'application/json; charset=utf-8'
+                    },
+                    success: (result) => console.log(result),
+                    error: (error) => console.log(error)
+                })
+
+                if (grid.pageSettings.currentPage !== 1 && grid.editSettings.newRowPosition === 'Top') {
+                    args.index = (grid.pageSettings.currentPage * grid.pageSettings.pageSize) - grid.pageSettings.pageSize;
+                } else if (grid.editSettings.newRowPosition === 'Bottom') {
+                    args.index = (grid.pageSettings.currentPage * grid.pageSettings.pageSize) - 1;
+                }
+            }
+        }
+
+       function valueChange() {
+            var games = document.getElementById('games').ej2_instances[0];
+            var value = document.getElementById('value');
+            var text = document.getElementById('text');
+            value.innerHTML = games.value === null ? 'null' : games.value.toString();
+            text.innerHTML = games.text === null ? 'null' : games.text.toString();
+        }
+
+    </script>
+
+    <style>
+        #typeddl {
+            min-width: 100px;
+        }
+    </style>

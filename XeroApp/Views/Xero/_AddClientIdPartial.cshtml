@@ -1,0 +1,97 @@
+﻿@model Core.XeroClientApp
+
+<div class="row">
+    <form id="xeroAppForm" novalidate>
+        <div class="col-md-6">
+            <ejs-textbox id="clientid" placeholder="Enter Client Id" name="clientid"></ejs-textbox>
+        </div>
+        <div class="col-md-6">
+            <ejs-textbox id="callbackuri" placeholder="Enter Callback Uri" name="callbackuri"></ejs-textbox>
+        </div>
+        <div class="col-md-6">
+            <button type="button" onclick="saveXeroAppInfo()" id="add" class="btn btn-primary">Add</button>
+        </div>
+    </form>
+</div>
+
+<div id="addClientIdContainer">
+    <ejs-dialog id='addClientIddialog' isModal="true" width="300px"
+                header="<div class='dlg-template e-icon-settings'>MESSAGE</div>"
+                showCloseIcon="true" created="modalCreated"
+                overlayClick="onOverlayClick"
+                target="#addClientIdContainer">
+        <e-content-template>
+            <p id="message"></p>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<div id="successContainer">
+    <ejs-dialog id='successDialog' isModal="true" width="300px"
+                header="<div class='dlg-template e-icon-settings'>MESSAGE</div>"
+                showCloseIcon="true" created="modalCreated"
+                overlayClick="onOverlayClick"
+                target="#addClientIdContainer">
+        <e-content-template>
+            <p>Client Id and Callback URI saved!</p>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<script>
+    var dialogObj;
+
+    function modalCreated() {
+        dialogObj = this;
+        dialogObj.hide();
+    }
+
+    function saveXeroAppInfo() {
+        let details = {
+            clientId: $("#clientid").val(),
+            callbackUri: $("#callbackuri").val()
+        }
+
+        let errDialog = document.getElementById("addClientIddialog").ej2_instances[0]
+        let errDlgHeader = document.getElementById("addClientIddialog_dialog-header")
+        let errDlgContent = document.getElementById("addClientIddialog_dialog-content")
+
+        if (details.clientId == '' || details.callbackUri == '') {
+            document.getElementById("message").innerHTML = "Provide Client Id and Callback Uri."
+            dialog.show()
+
+            stylePopup(errDlgHeader, errDlgContent, "error-dlg-header-template", "dlg-content-template")
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: '/Xero/SaveXeroAppInfo',
+                contentType: 'application/json',
+                data: JSON.stringify(details),
+                success: () => {
+                    var dialog = document.getElementById("successDialog").ej2_instances[0]
+                    dialog.show()
+
+                    var dlgHeader = document.getElementById("successDialog_dialog-header")
+                    var dlgContent = document.getElementById("successDialog_dialog-content")
+
+                    stylePopup(dlgHeader, dlgContent, "success-dlg-header-template", "dlg-content-template")
+
+                    setTimeout(function() {
+                        operations.getClientApps()
+                        dialog.hide()
+                    }, 3000);
+                },
+                error: (e) => {
+                    document.getElementById("message").innerHTML = e.responseText
+                    errDialog.show()
+                    stylePopup(errDlgHeader, errDlgContent, "error-dlg-header-template", "dlg-content-template")
+                }
+            })
+        }
+    }
+
+    function stylePopup(header, content, headerStyle, contentStyle) {
+        header.classList.add(headerStyle)
+        content.classList.add(contentStyle)
+    }
+</script>

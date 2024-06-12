@@ -1,0 +1,83 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+     List<object> Toolbaritems = new List<Object>();
+    Toolbaritems.Add(new { text = "Update", tooltipText = "Update Idea", prefixIcon = "e-update", id = "Update" });
+    Toolbaritems.Add(new { text = "Delete", tooltipText = "Delete Idea", prefixIcon = "e-delete", id = "Delete" });
+    Toolbaritems.Add(new { text = "", tooltipText = "Thumbs-up", prefixIcon = "e-thumbs-up", id = "Thumbs-up" });
+    Toolbaritems.Add(new { text = "", tooltipText = "Thumbs-down", prefixIcon = "e-thumbs-down-2", id = "Thumbs-down" });
+
+     var asyncSettings = new Syncfusion.EJ2.Inputs.UploaderAsyncSettings { SaveUrl = @Url.Content("~/ReportBug/Save"), RemoveUrl = @Url.Content("~/Uploader/Remove") };
+
+}
+
+<div style="background-color:white; margin-top:80px;">
+    <div class="ms-5 mt-5">
+        <div class="col-lg-12 control-section">
+            <div class="row">
+                <div class="col-4">
+                </div>
+                <div class="col-md-auto">
+                    <div style="margin-top:11.5%;">
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top:1%">
+                <div class="col-6">
+                    <b>Error encountered...</b><br/>
+                    <p>Sorry for the inconvenience. This will be automatically sent to the support team.</p>
+                    <b>Error details:</b><br/>
+                    @*   <ejs-datepicker id="dateTransaction" placeholder="Transaction Date" format="dd/MM/yyyy" min="minDate"></ejs-datepicker>*@
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col-md-auto">
+                </div>
+                <div class="col-3">
+                </div>
+                <div class="col-4">
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 control-section" style="margin-top:1%;">
+            <div class="content-wrapper">
+                <div class="row">
+                <div class="col-1">
+                    Error Path :
+                </div>
+                <div class="col-10">
+                     <input class="form-control mb-3" value="@ViewBag.exceptionPath"  readonly/> </input> 
+                </div>
+                </div>
+                <div class="row">
+                <div class="col-1">
+                    Error Message:
+                </div>
+                <div class="col-10">
+                    <textarea class="form-control mb-3" value="" readonly>@ViewBag.exceptionMessage</textarea>
+                </div>
+                </div>
+                 <div class="row">
+                <div class="col-1">
+                    Stack Trace :
+                </div>
+                <div class="col-10">
+                    <textarea class="form-control mb-3" value=""  style="height: 400px;" readonly >@ViewBag.stacktrace</textarea>
+                </div>
+                </div>
+                 <div class="row">
+                <div class="col-1">
+                
+                </div>
+                <div class="col-10">
+                @*    <button class='e-btn e-primary' id='btnSubmit'>Okay</button>*@
+                    <a asp-controller="Xero" asp-action="BatchPayments" class="e-btn e-primary">Click here to continue</a>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 control-section" style="margin-left:6rem !important;">
+    </div>
+</div>

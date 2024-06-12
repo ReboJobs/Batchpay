@@ -1,0 +1,314 @@
+﻿@{
+    var selectedBills = "Bills Selected: <label id='selectedBills'></label>, Total: <b id='total'></b>";
+
+
+    List<object> Toolbaritems = new List<Object>();
+    //Toolbaritems.Add(new { text = "Export To Aba File", tooltipText = "to ABA", prefixIcon = "e-export", id = "Export",disabled=blnisAU });
+    //Toolbaritems.Add(new { text = "Export To CSV File", tooltipText = "to CSV", prefixIcon = "e-export-csv", id = "ExportCSV",disabled=blnisNZ });
+
+    @if (@ViewBag.orgCountryCode == "AU")
+    {
+        Toolbaritems.Add(new { text = "1. Export To Aba File", tooltipText = "to ABA", prefixIcon = "e-export", id = "Export" });
+    }
+
+    @if (@ViewBag.orgCountryCode == "NZ")
+    {
+        Toolbaritems.Add(new { text = "1. Export To CSV File", tooltipText = "to CSV", prefixIcon = "e-export-csv", id = "ExportCSV" });
+    }
+
+    @if (@ViewBag.orgCountryCode == "GB")
+    {
+        Toolbaritems.Add(new { text = "1. Export To Bacs File", tooltipText = "to Bacs File", prefixIcon = "e-export", id = "ExportToBacs" });
+    }
+    Toolbaritems.Add(new { text = "2. Mark as Paid", tooltipText = "Mark selected invoices as Paid", prefixIcon = "e-check", id = "MarkAsPaid" , disabled=true  });
+    Toolbaritems.Add(new { text = "3. Send Remittances", tooltipText = "Send Remittances", prefixIcon = "e-send-backward", id = "SendRemittances" , disabled=true });
+    Toolbaritems.Add(new { text = "4. Export BatchPay Report", tooltipText = "Send Remittances", prefixIcon = "e-export", id = "ExportBatchPaymentReport" , disabled=true});
+    Toolbaritems.Add(new { text = "Refresh", tooltipText = "Refresh invoices from Xero", prefixIcon = "e-repeat", id = "Refresh" });
+    Toolbaritems.Add(new { text = "Sort", tooltipText = "Sort Columns", prefixIcon = "e-filtered-sort-ascending", id = "SortColumns" });
+    Toolbaritems.Add(new { text = "Clear Sort Colums", tooltipText = "Clear Sort Columns", prefixIcon = "e-filter-clear", id = "ClearSortColumns" });
+    Toolbaritems.Add(new { text = selectedBills });
+    Toolbaritems.Add(new { text = "Search" });
+
+    var minDate = DateTime.Now;
+    var currentDate = DateTime.Now.ToString("dd/MM/yyyy");
+}
+<div style="background-color:white;">
+    <div class="ms-5 mt-5 mb-3">
+        <div class="col-lg-12 control-section">
+            <div class="row">
+                <div class="col-4">
+                </div>
+                <div class="col-md-auto">
+                    <div style="margin-top:11.5%;">
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top:1%">
+                <div class="col-4">
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col-md-auto">
+                </div>
+                <div class="col-3">
+                </div>
+                <div class="col-4">
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 control-section" style="margin-top:1%;">
+            <div class="content-wrapper">
+                <div class="row">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dataGrid">
+        <ejs-grid id="Grid" toolbarClick="operations.onToolbarClick" toolbar=Toolbaritems rowSelected="operations.onSelectBills" beginEdit="operations.onBeginEdit" rowSelecting="operations.onRowSelecting" RowDataBound="operations.onGridDataBound" actionComplete="actionCompleteInvoiceGrid" rowDeselected="operations.onDeselectBills" rowDeselecting="operations.onRowDeselecting" dataBound="operations.onGridLoad" allowSelection="true" allowPaging="true" allowSorting="true" allowFiltering="true" allowResizing="true">
+            <e-grid-selectionsettings checkboxOnly="true" type="Multiple" PersistSelection="true"></e-grid-selectionsettings>
+            <e-grid-filtersettings type="Excel"></e-grid-filtersettings>
+            <e-grid-pagesettings pageSizes="@ViewBag.PageSizes" pageSize="@ViewBag.DefaultPageSize"></e-grid-pagesettings>
+            <e-grid-editSettings allowEditing="true"></e-grid-editSettings>
+            <e-grid-columns>
+                <e-grid-column type="checkbox" width="50"></e-grid-column>
+                <e-grid-column field="invoiceID" headerText="invoiceID" isPrimaryKey="true" textAlign="Right" width="170" allowEditing="false" visible="false"></e-grid-column>
+                <e-grid-column field="invoiceNumber" headerText="Ref" textAlign="Left" width="170" allowEditing="false"></e-grid-column>
+                <e-grid-column field="contact.name" headerText="Contact" width="200" type="string" allowEditing="false"></e-grid-column>
+                <e-grid-column Field="date" HeaderText="Date" Width="130" Format="dMy" allowEditing="false"></e-grid-column>
+                <e-grid-column field="dueDate" headerText="Due Date" width="130" Format="dMy" allowEditing="false"></e-grid-column>
+                <e-grid-column field="amountPaid" headerText="Paid" width="120" format="C2" type="number" textAlign="Right" allowEditing="false"></e-grid-column>
+                <e-grid-column field="amountDue" headerText="Due" width="120" format="C2" type="number" textAlign="Right" allowEditing="false"></e-grid-column>
+                <e-grid-column field="amountDueEditable" headerText="Pay Now" width="130" format="C2" type="number" textAlign="Right" allowEditing="true"></e-grid-column>
+                <e-grid-column field="status" headerText="Status" width="120" allowEditing="false"></e-grid-column>
+                <e-grid-column field="sentToContact" headerText="Sent" width="120" allowEditing="false" visible="false"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+
+</div>
+<div id="dlgContainer" style="visibility:hidden">
+    <ejs-dialog id='dialog' isModal="true" width="300px" visible="false" closeOnEscape="false" beforeClose="dlgContainerBeforeOpen"
+                header="<div class='dlg-template e-icon-settings'>MESSAGE</div>"
+                showCloseIcon="true" created="modalCreated"
+                target="#dlgContainer">
+        <e-content-template>
+            <p id="message"></p>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<div id="promptDlgContainer" style="visibility:hidden">
+    <ejs-dialog id='promptInfoDialog' isModal="true" width="400px" visible="false" closeOnEscape="false" beforeClose="promptDlgContainerBeforeOpen"
+                header="<div class='e-icon-settings'>INFO</div>"
+                showCloseIcon="false" created="modalCreated"
+                target="#promptDlgContainer"
+                footerTemplate="<button class='e-btn e-primary' id='btnPromptOkay'>Okay</button><button class='e-btn' id='btnPromptCancel'>Cancel</button>">
+        <e-content-template>
+            <div id="progressStatus4"></div>
+            <br />
+            <div class="progress" id="Prog4"> </div>
+            <br /><br />
+            <div id="promptContent"></div>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+
+
+<div id="promptDlgProgressContainer" style="visibility:hidden">
+    <ejs-dialog id='prompProgressDialog' isModal="true" width="400px" visible="false" closeOnEscape="false" beforeClose="promptDlgProgressContainerBeforeOpen"
+                header="<div class='e-icon-settings'>INFO</div>"
+                target="#promptDlgProgressContainer"
+                showCloseIcon="false" created="modalCreated">
+        <e-content-template>
+            <div id="progressStatusOnly"></div>
+            <br />
+            <div class="progress" id="ProgOnly"> </div>
+            <br /><br />
+            @*<div id="promptContent"></div>*@
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+
+<div id="promptDlgContainerTransactionDate" style="visibility:hidden">
+    <ejs-dialog id='promptInfoDialogTransactionDate' isModal="true" width="400px" visible="false" closeOnEscape="false" beforeOpen="promptDlgContainerTransactionDateBeforeOpen"
+                header="<div class='e-icon-settings'>INFO</div>"
+                showCloseIcon="false" created="modalCreated"
+                target="#promptDlgContainerTransactionDate"
+                footerTemplate="<button class='e-btn e-primary' id='btnPromptOkayTransactionDate'>Okay</button><button class='e-btn' id='btnPromptCancelTransactionDate'>Cancel</button>">
+        <e-content-template>
+            <div id="progressStatus"></div>
+            <br />
+            <div class="progress" id="Prog"> </div>
+            <br /><br />
+            <div id="promptContentTransactionDate"></div>
+            <b>Select Transaction Date</b>
+            <ejs-datepicker id='dateTransaction' placeholder='Transaction Date' format='dd/MM/yyyy' min='minDate' value="@DateTime.Now" change="onDtChange"></ejs-datepicker>
+            <p id="messageTransactionDate" style="color:red;">Transaction date is required.</p>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+
+<div id="promptDlgContainerTransactionDate2" style="visibility:hidden">
+    <ejs-dialog id='promptInfoDialogTransactionDate2' isModal="true" width="400px" visible="false" beforeOpen="promptDlgContainerTransactionDate2"
+                header="<div class='e-icon-settings'>INFO</div>"
+                showCloseIcon="false" created="modalCreated"
+                target="#promptDlgContainerTransactionDate2"
+                footerTemplate="<button class='e-btn e-primary' id='btnPromptOkayTransactionDate2'>Okay</button><button class='e-btn' id='btnPromptCancelTransactionDate2'>Cancel</button>">
+        <e-content-template>
+            <div id="progressStatus5"></div>
+            <br />
+            <div class="progress" id="Prog5"> </div>
+            <br /><br />
+            <div id="promptContentTransactionDate"></div>
+            <b>Select Transaction Date</b>
+            <ejs-datepicker id='dateTransaction2' placeholder='Transaction Date' format='dd/MM/yyyy' min='minDate' value="@DateTime.Now" change="onDtChange"></ejs-datepicker>
+            <p id="messageTransactionDate" style="color:red;">Transaction date is required.</p>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<div id="errorDlgContainer" style="visibility:hidden" >
+    <ejs-dialog id='errorDialog' isModal="true" width="400px" visible="false" closeOnEscape="false" beforeOpen="errorDlgContainerBeforeOpen"
+                header="<div class='e-icon-settings'>ERROR</div>"
+                showCloseIcon="false" created="modalCreated"
+                footerTemplate="<button class='e-btn e-primary' id='btnCloseErrorDialog'>Okay</button>"
+                target="#errorDlgContainer">
+        <e-content-template>
+            <div id="errorContent"></div>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<div id="promptContainer" style="visibility:hidden">
+    <ejs-dialog id='promptDialog' isModal="true" width="400px" visible="false" closeOnEscape="false" beforeOpen="promptContainerBeforeOpen"
+                header="<div class='dlg-template e-icon-settings'>Pay Now</div>"
+                showCloseIcon="false" created="operations.onModalLoad"
+                target="#promptContainer"
+                footerTemplate="<button class='e-btn e-primary' id='btnOkay'>Okay</button><button class='e-btn' id='btnCancel'>Cancel</button>">
+        <e-content-template>
+            <div id="progressStatus2"></div>
+            <br />
+            <div class="progress" id="Prog2"> </div>
+            <br /><br />
+            <ejs-dropdownlist id="bankAccountTypesDropDown" placeholder="Select Bank Account" popupHeight="220px" index=0 change="operations.onSelectBank">
+                <e-dropdownlist-fields text="name" value="bankAccountNumber"></e-dropdownlist-fields>
+            </ejs-dropdownlist>
+            <p id="messageBank" style="color:red;">Bank is required.</p>
+            <div id="errorContentBank" style="color:red;"></div>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<div id="promptContainerForABA"  style="visibility:hidden">
+    <ejs-dialog id='promptDialogABA' isModal="true" width="400px" visible="false" closeOnEscape="false" beforeOpen="promptContainerForABABeforeOpen"
+                header="<div class='dlg-template e-icon-settings'> <span id='fileFormat' class='dlg-template e-icon-settings'></span> File Issue</div>"
+                showCloseIcon="true" created="operations.onModalLoad"
+                target="#promptContainerForABA"
+                footerTemplate="<button class='e-btn e-primary' id='btnShowIssues'>Download Errors</button><button class='e-btn e-primary' id='btnABAOkay'>Proceed</button><button class='e-btn' id='btnABACancel'>Cancel</button>">
+        <e-content-template>
+            <div id="progressStatus3"></div>
+            <br />
+            <div class="progress" id="Prog3"> </div>
+            <br /><br />
+            <br /><br />
+            <p id="prompt"></p>
+            <ul style="list-style-type:disc">
+                <li>If you want to review the errors, click the <b>Download Errors</b> button</li>
+                <li>Click <b>Proceed</b> if you want to continue but exclude those bills with errors</li>
+                <li>If all bills have errors, <b>Proceed</b> button is disabled. Just click the <b>Cancel</b> button</li>
+                <li>Otherwise click <b>Cancel</b></li>
+            </ul>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<div id="promptContainerForMarkAsPaid"  style="visibility:hidden">
+    <ejs-dialog id='promptDialogMarkAsPaid' isModal="true" width="400px" visible="false" closeOnEscape="false" beforeOpen="promptContainerForMarkAsPaidBeforeOpen"
+                header="<div class='dlg-template e-icon-settings'> <span id='fileFormat2' class='dlg-template e-icon-settings'></span> File Issue</div>"
+                showCloseIcon="true" created="operations.onModalLoad"
+                target="#promptContainerForMarkAsPaid"
+                    footerTemplate="<button class='e-btn e-primary' id='btnShowMarkAsPaidIssues'>Download Errors</button><button class='e-btn e-primary' id='btnMarkAsPaidOkay'>Proceed</button><button class='e-btn' id='btnMarkAsPaidCancel'>Cancel</button>">
+        <e-content-template>
+            <div id="progressStatus10"></div>
+            <br />
+            <div class="progress" id="Prog10"> </div>
+            <br /><br />
+            <p id="promptMarkAsIssue"></p>
+            <ul style="list-style-type:disc">
+                <li>If you want to review the errors, click the <b>Download Errors</b> button</li>
+                <li>Click <b>Proceed</b> if you want to continue but exclude those bills with errors</li>
+                <li>If all bills have errors, <b>Proceed</b> button is disabled. Just click the <b>Cancel</b> button</li>
+                <li>Otherwise click <b>Cancel</b></li>
+            </ul>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<div id="promptContainerExpireSubscriptions"  style="visibility:hidden">
+    <ejs-dialog id='promptExpireDialog' isModal="true" width="400px" visible="false" closeOnEscape="false" beforeOpen="promptContainerExpireSubscriptionsBeforeOpen"
+                header="<div class='dlg-template e-icon-settings'>Expired Subscriptions</div>"
+                showCloseIcon="true" created="operations.onModalLoad"
+                target="#promptContainerExpireSubscriptions"
+                footerTemplate="<button class='e-btn e-primary' id='btnOK'>OK</button>">
+        <e-content-template>
+            <p id="prompt2"></p>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<partial name="BatchPaymentSorting" />
+<script type="text/javascript" src="~/js/BatchPayments.js"></script>
+
+<script>
+  var expireOrganization = '@ViewBag.PromptPopUP'
+  var countryCode = '@ViewBag.orgCountryCode'
+</script>
+
+<style>
+
+    .e-icon-settings {
+        color: gray;
+    }
+
+    #dateTransaction {
+        font-weight: bold;
+    }
+
+    #control-container {
+        padding: 0px !important;
+    }
+
+    .linear-parent {
+        text-align: center;
+        margin-top: 2%;
+    }
+
+    .linear-button {
+        text-align: center;
+    }
+
+    .linear-progress {
+        width: 80%;
+        margin: auto;
+        margin-bottom: 3%;
+    }
+
+    #reLoad {
+        x border-radius: 4px;
+        text-transform: capitalize;
+    }
+
+    .disablegrid {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    .wrapper {
+        cursor: not-allowed;
+    }
+
+</style>

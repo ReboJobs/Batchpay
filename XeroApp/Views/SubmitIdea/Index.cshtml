@@ -1,0 +1,727 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+     List<object> Toolbaritems = new List<Object>();
+    Toolbaritems.Add(new { text = "Update", tooltipText = "Update Idea", prefixIcon = "e-update", id = "Update" });
+    Toolbaritems.Add(new { text = "Delete", tooltipText = "Delete Idea", prefixIcon = "e-delete", id = "Delete" });
+    Toolbaritems.Add(new { text = "", tooltipText = "Thumbs-up", prefixIcon = "e-thumbs-up", id = "Thumbs-up" });
+    Toolbaritems.Add(new { text = "", tooltipText = "Thumbs-down", prefixIcon = "e-thumbs-down-2", id = "Thumbs-down" });
+
+     var asyncSettings = new Syncfusion.EJ2.Inputs.UploaderAsyncSettings { SaveUrl = @Url.Content("~/ReportBug/Save"), RemoveUrl = @Url.Content("~/Uploader/Remove") };
+
+}
+
+<br />
+    <div class="ms-5 mt-5">
+
+        <div class="col-lg-12 control-section">
+          <div class="row">
+            <div class="col-4">
+                 <ejs-textbox id="Title" Placeholder='Title, Description' floatLabelType="Auto"></ejs-textbox>
+            </div>
+          </div>
+           <div class="row" style="margin-top:1%">
+            <div class="col-2">
+                <ejs-datepicker id="dateFrom" placeholder="Date From"></ejs-datepicker>   
+            </div>
+            <div class="col-2">
+                <ejs-datepicker id="dateTo" placeholder="Date To"></ejs-datepicker>  
+            </div>
+            <div class="col-md-auto">
+               <ejs-button id="btnSearch" content="Search" isPrimary="true"  cssClass="e-info"></ejs-button>
+            </div>
+            <div class="col-5">
+               
+            </div>
+            <div class="col-2">
+                <ejs-button id="btnAdd" content="Add" isPrimary="true"  cssClass="e-info"></ejs-button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 control-section" style="margin-top:1%;">
+             <div class="content-wrapper" style="z-index:-1; position:absolute">
+                <div class="row" >
+                    <ejs-grid id="listSubmitIdea" height="200" Width="auto"  rowSelected="rowSelected" toolbar="Toolbaritems" toolbarClick="toolbarClick" toolbar="toolbar" allowSelection="true" allowPaging="true" allowSorting="true" allowFiltering="true" allowResizing="true">
+                        <e-grid-columns>
+                            <e-grid-column field="id" headerText="ID"  Width="100" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="title" headerText="Title" width="110" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="submittedBy" headerText="Submitted By" width="100" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="dateCreated" headerText="Date Submitted"  Format="dd/MM/yyyy hh:mm:ss tt" TextAlign="Center" width="100" allowEditing="false"></e-grid-column>
+                            <e-grid-column field="totalVotes" headerText="No. Of Votes" width="60" allowEditing="false"></e-grid-column>
+                        </e-grid-columns>
+                    </ejs-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="dialogContainerForSubmitSearch">
+        <ejs-dialog id='dialogSubmitSearch' isModal="true" width="800px" height="400px" visible="false"
+                    header="<div class='dlg-template e-icon-settings'>Submit Idea</div>"
+                    showCloseIcon="true" created="modalCreated"
+                    target="#dialogContainerForSubmitSearch"
+                    footerTemplate="<button class='e-btn e-primary' id='btnSubmit'>Submit</button><button class='e-btn' id='btnCancel'>Close</button>">
+            <e-content-template>
+
+                    <div class="form-group d-flex mb-2">
+                        <label class="col-2" for="name">Title</label>
+                        <input type="text" class="form-control" id="ideatitle" placeholder="Title">
+                     </div>
+                 
+                     <div class="form-group d-flex">
+                          <div class="d-inline-flex flex-column w-100">
+                               <label class="col-2"  for="name">Description</label>
+                               <textarea class="form-control mb-3" id="description" rows="3"></textarea>
+                                <input class="mb-3" type="file"name="file" id="file" />
+                                <button class="btn btn-primary w-25" onclick="uploadFile()">
+                                    Upload Image
+                                </button>
+                           </div>
+                     </div>
+
+            </e-content-template>
+        </ejs-dialog>
+    </div>
+
+    <div id="promptContainerError">
+    <ejs-dialog id='promptError' isModal="true" width="400px" visible="false"
+                header="<div class='dlg-template e-icon-settings'>Submit Idea Prompt</div>"
+                showCloseIcon="true" created="modalCreated"
+                target="#promptContainerError"
+                footerTemplate="<button class='e-btn e-primary' id='btnOK'>OK</button>">
+            <e-content-template>
+               <p id="prompt"></p>
+             </e-content-template>
+        </ejs-dialog>
+    </div>
+
+    <div id="promptContainerForSubmit">
+        <ejs-dialog id='promptDialogSubmit' isModal="true" width="400px" visible="false"
+                    header="<div class='dlg-template e-icon-settings'>Delete Idea</div>"
+                    showCloseIcon="true" created="modalCreated"
+                    target="#promptContainerForSubmit"
+                    footerTemplate="<button class='e-btn e-primary' id='btnOkay'>Yes</button><button class='e-btn' id='btnCancelDel'>No</button>">
+            <e-content-template>
+                <p>Do you want to delete the submit idea?</p>
+            </e-content-template>
+        </ejs-dialog>
+    </div>
+
+
+
+
+    <script type="text/javascript">
+
+        
+        var dialogObj;
+        var gridGlobal;
+        var selectedRecords;
+        var ideaid;
+        var ideaTitle;
+        var ideaDescription;
+        var inputElement;
+
+         function onFileRemove(args) {
+            args.postRawFile = false;
+        }
+
+        function onFileSelect(args) {
+            inputElement  = args.filesData;
+        }
+
+        //upload a file
+        function uploadFile() {
+           var files = document.getElementById('file').files;
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file" + x, files[x]);
+                        //data.append(base64String, base64String);
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: '/SubmitIdea/UploadImage',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (result) {
+                            var dialogError = document.getElementById("promptError").ej2_instances[0];
+                            document.getElementById("prompt").innerHTML = result;
+                            dialogError.show()
+
+                            document.getElementById("btnOK").onclick = function (e) {
+                                dialogError.hide()
+                            }
+                        },
+                        error: function (xhr, status, p3, p4) {
+                            alert('Something is going to wrong please try agan!'); 
+                        }
+                    });
+                } else {
+                    alert("Upgrade your browser!");
+                }
+            }
+        };
+        
+
+        function rowSelected(args){ 
+           gridGlobal = document.getElementById("listSubmitIdea").ej2_instances[0]
+           selectedRecords = gridGlobal.getSelectedRecords();
+           ideaid = selectedRecords[0].id;
+           ideaTitle = selectedRecords[0].title;
+           ideaDescription = selectedRecords[0].description;
+        } 
+
+
+        //generation of modal
+        function modalCreated() {
+            dialogObj = this;
+            dialogObj.hide();
+        }
+
+
+        function toolbarClick (args) {
+                
+            if (args.item.id === "Update") {
+
+                if (typeof ideaid == 'undefined' || ideaid == ''){
+                    var dialogError = document.getElementById("promptError").ej2_instances[0];
+                    var result = "Please select a record in the grid"
+                    document.getElementById("prompt").innerHTML = result;
+                    dialogError.show()
+
+                    document.getElementById("btnOK").onclick = function (e) {
+                        dialogError.hide()
+                        return
+                    }
+                } else {
+                    var dialog = document.getElementById("dialogSubmitSearch").ej2_instances[0]
+                    document.getElementById("ideatitle").value = ideaTitle;
+                    document.getElementById("description").value = ideaDescription;
+
+                    dialog.show()
+
+                    $("button.e-dlg-closeicon-btn.e-control.e-btn.e-lib.e-flat.e-icon-btn").click(function() {
+                        document.getElementById("ideatitle").value = "";
+                        document.getElementById("description").value = "";
+                    });
+
+                    document.getElementById("btnCancel").onclick = function (e) {
+                        dialog.hide()
+                        document.getElementById("ideatitle").value = "";
+                        document.getElementById("description").value = "";
+                    }
+
+
+                    document.getElementById("btnSubmit").onclick = function (e) {
+
+                        let ideatitle = document.getElementById("ideatitle").value;
+                        let description = document.getElementById("description").value;
+                        
+                        let ideaObject = {
+                            Title: ideatitle,
+                            Description: description,
+                            Id: ideaid
+                        }
+               
+                        $.ajax({
+                            url: '/SubmitIdea/Submit',
+                            type: 'POST',
+                            data: JSON.stringify(ideaObject),
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8',
+                                'Accept': 'application/json; charset=utf-8'
+                            },
+                            success: (result) => {
+
+                                dialog.hide()
+
+                                let grid = document.getElementById("listSubmitIdea").ej2_instances[0]
+
+                                var dateFromInit = new Date();
+                                dateFromInit.setDate(dateFromInit.getDate()-30);
+
+                                var dateToInit = new Date();
+                                dateToInit.setDate(dateToInit.getDate());
+
+                                var title = document.getElementById("Title").ej2_instances[0];
+                                var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+                                var dateTo = document.getElementById("dateTo").ej2_instances[0];
+            
+                                title.value = title.value ==  null ? "" : title.value;
+                                dateFrom.value = dateFrom.value ==  null ? dateFromInit : dateFrom.value;
+                                dateTo.value = dateTo.value ==  null ? dateToInit : dateTo.value;
+
+
+                                let submitIdeaSearch = {
+                                    DateFrom: dateFrom.value,
+                                    DateTo: dateTo.value,
+                                    Text:title.value,
+                                }
+
+                                grid.showSpinner();
+
+                                var ajax = new ej.base.Ajax({
+                                    url: '/SubmitIdea/SearchSubmitIdeas',
+                                    type: 'POST',
+                                    data: JSON.stringify(submitIdeaSearch),
+                                    contentType: 'application/json',
+                                    accept: 'application/json'
+                                })
+                                ajax.send()
+                                ajax.onSuccess = function (data) {
+                                    grid.dataSource = JSON.parse(data)
+                                    grid.hideSpinner();
+                                    document.getElementById("ideatitle").value = "";
+                                    document.getElementById("description").value = "";
+                                    ideaid = "";
+                                }
+
+                            },
+                            error: (error) => {
+                                alert("error");
+                            }
+                        })
+                    }
+                
+                }
+   
+            }
+
+            if (args.item.id === "Delete") {
+
+                if (typeof ideaid == 'undefined' || ideaid == ''){
+                    var dialogError = document.getElementById("promptError").ej2_instances[0];
+                    var result = "Please select a record in the grid"
+                    document.getElementById("prompt").innerHTML = result;
+                    dialogError.show()
+
+                    document.getElementById("btnOK").onclick = function (e) {
+                        dialogError.hide()
+                        return
+                    }
+                }else {
+
+                    var dialog = document.getElementById("promptDialogSubmit").ej2_instances[0]
+                    var dlgHeader = document.getElementById("promptDialogSubmit_dialog-header")
+                    var dlgContent = document.getElementById("promptDialogSubmit_dialog-content")
+
+                    dlgHeader.classList.add("error-dlg-header-template")
+                    dlgContent.classList.add("dlg-content-template")
+
+                    dialog.show()
+                    gridGlobal.hideSpinner()
+
+                    document.getElementById("btnOkay").onclick = function(e) {
+
+                        $.ajax({
+                            url: '/SubmitIdea/DeleteIdea',
+                            type: 'POST',
+                            data:  {SubmitIdeaID: ideaid}, 
+                            success: (result) => {
+                        
+                                if (result.success) {
+
+                                    var dateFromInit = new Date();
+                                    dateFromInit.setDate(dateFromInit.getDate()-30);
+
+                                    var dateToInit = new Date();
+                                    dateToInit.setDate(dateToInit.getDate());
+
+                        
+                                    var title = document.getElementById("Title").ej2_instances[0];
+                                    var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+                                    var dateTo = document.getElementById("dateTo").ej2_instances[0];
+            
+                                    title.value = title.value ==  null ? "" : title.value;
+                                    dateFrom.value = dateFrom.value ==  null ? dateFromInit : dateFrom.value;
+                                    dateTo.value = dateTo.value ==  null ? dateToInit : dateTo.value;
+
+                                    let submitIdeaSearch = {
+                                        DateFrom: dateFrom.value,
+                                        DateTo: dateTo.value,
+                                        Text:title.value,
+                                    }
+
+                                    gridGlobal.showSpinner()
+
+                                        var ajax = new ej.base.Ajax({
+                                        url: '/SubmitIdea/SearchSubmitIdeas',
+                                        type: 'POST',
+                                        data: JSON.stringify(submitIdeaSearch),
+                                        contentType: 'application/json',
+                                        accept: 'application/json'
+                                    })
+                                    ajax.send()
+                                    ajax.onSuccess = function (data) {
+                                        gridGlobal.dataSource = JSON.parse(data)
+                                        gridGlobal.hideSpinner();
+                                        dialog.hide();
+                                        ideaid = "";
+                                    }
+
+
+                                } else {
+                                    // alert(result.responseText);
+                                }  
+                            },
+                            error: (error) => {
+                                alert("error");
+                            }
+                        })
+                    }
+
+                    document.getElementById("btnCancelDel").onclick = function(e) {
+                        dialog.hide();
+                        gridGlobal.hideSpinner;
+                    }
+                
+                }
+                
+            }
+
+            if (args.item.id === "Thumbs-up") {
+
+                if (typeof ideaid == 'undefined' || ideaid == ''){
+                    var dialogError = document.getElementById("promptError").ej2_instances[0];
+                    var result = "Please select a record in the grid"
+                    document.getElementById("prompt").innerHTML = result;
+                    dialogError.show()
+
+                    document.getElementById("btnOK").onclick = function (e) {
+                        dialogError.hide()
+                        return
+                    }
+                } else {
+
+                     var boolVote = true;
+                
+                    $.ajax({
+                        url: '/SubmitIdea/VoteIdea',
+                        type: 'POST',
+                        data:  {votedIdeaID: ideaid,IsUserVoted: boolVote}, 
+                        success: (result) => {
+                        
+                            if (result.success) {
+
+                                var dateFromInit = new Date();
+                                dateFromInit.setDate(dateFromInit.getDate()-30);
+
+                                var dateToInit = new Date();
+                                dateToInit.setDate(dateToInit.getDate());
+
+                        
+                                var title = document.getElementById("Title").ej2_instances[0];
+                                var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+                                var dateTo = document.getElementById("dateTo").ej2_instances[0];
+            
+                                title.value = title.value ==  null ? "" : title.value;
+                                dateFrom.value = dateFrom.value ==  null ? dateFromInit : dateFrom.value;
+                                dateTo.value = dateTo.value ==  null ? dateToInit : dateTo.value;
+
+                                let submitIdeaSearch = {
+                                    DateFrom: dateFrom.value,
+                                    DateTo: dateTo.value,
+                                    Text:title.value,
+                                }
+
+                                gridGlobal.showSpinner()
+
+                                 var ajax = new ej.base.Ajax({
+                                    url: '/SubmitIdea/SearchSubmitIdeas',
+                                    type: 'POST',
+                                    data: JSON.stringify(submitIdeaSearch),
+                                    contentType: 'application/json',
+                                    accept: 'application/json'
+                                })
+                                ajax.send()
+                                ajax.onSuccess = function (data) {
+                                    gridGlobal.dataSource = JSON.parse(data)
+                                    gridGlobal.hideSpinner();
+                                    ideaid = "";
+                                }
+
+
+                            } else {
+                              // alert(result.responseText);
+                            }  
+                        },
+                        error: (error) => {
+                            alert("error");
+                        }
+                    })
+                
+                }
+
+            }
+
+            if (args.item.id === "Thumbs-down") 
+            {
+
+                 if (typeof ideaid == 'undefined' || ideaid == ''){
+                    var dialogError = document.getElementById("promptError").ej2_instances[0];
+                    var result = "Please select a record in the grid"
+                    document.getElementById("prompt").innerHTML = result;
+                    dialogError.show()
+
+                    document.getElementById("btnOK").onclick = function (e) {
+                        dialogError.hide()
+                        return
+                    }
+                } else {
+
+                     var boolVote = false;
+                
+                    $.ajax({
+                        url: '/SubmitIdea/VoteIdea',
+                        type: 'POST',
+                        data:  {votedIdeaID: ideaid,IsUserVoted: boolVote}, 
+                        success: (result) => {
+                        
+                            if (result.success) {
+
+                                var dateFromInit = new Date();
+                                dateFromInit.setDate(dateFromInit.getDate()-30);
+
+                                var dateToInit = new Date();
+                                dateToInit.setDate(dateToInit.getDate());
+
+                        
+                                var title = document.getElementById("Title").ej2_instances[0];
+                                var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+                                var dateTo = document.getElementById("dateTo").ej2_instances[0];
+            
+                                title.value = title.value ==  null ? "" : title.value;
+                                dateFrom.value = dateFrom.value ==  null ? dateFromInit : dateFrom.value;
+                                dateTo.value = dateTo.value ==  null ? dateToInit : dateTo.value;
+
+                                let submitIdeaSearch = {
+                                    DateFrom: dateFrom.value,
+                                    DateTo: dateTo.value,
+                                    Text:title.value,
+                                }
+
+                                gridGlobal.showSpinner()
+
+                                 var ajax = new ej.base.Ajax({
+                                    url: '/SubmitIdea/SearchSubmitIdeas',
+                                    type: 'POST',
+                                    data: JSON.stringify(submitIdeaSearch),
+                                    contentType: 'application/json',
+                                    accept: 'application/json'
+                                })
+                                ajax.send()
+                                ajax.onSuccess = function (data) {
+                                    gridGlobal.dataSource = JSON.parse(data)
+                                    gridGlobal.hideSpinner();
+                                    ideaid = "";
+                                }
+
+
+                            } else {
+                              // alert(result.responseText);
+                            }  
+                        },
+                        error: (error) => {
+                            alert("error");
+                        }
+                    })
+                }
+            }
+
+        }
+
+         //loading page
+        document.addEventListener("DOMContentLoaded", function() {
+
+            InitializeGrid();
+
+        })
+
+        //initialize grid 
+        function InitializeGrid() {
+
+            let grid = document.getElementById("listSubmitIdea").ej2_instances[0]
+
+            var dateFromInit = new Date();
+            dateFromInit.setDate(dateFromInit.getDate()-30);
+
+            var dateToInit = new Date();
+            dateToInit.setDate(dateToInit.getDate());
+
+            
+            var title = document.getElementById("Title").ej2_instances[0];
+            var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+            var dateTo = document.getElementById("dateTo").ej2_instances[0];
+
+            
+            title.value = title.value ==  null ? "" : title.value;
+            dateFrom.value = dateFrom.value ==  null ? dateFromInit : dateFrom.value;
+            dateTo.value = dateTo.value ==  null ? dateToInit : dateTo.value;
+
+
+            let submitIdeaSearch = {
+                DateFrom: dateFrom.value,
+                DateTo: dateTo.value,
+                Title:title.value,
+            }
+
+            grid.showSpinner()
+
+            var ajax = new ej.base.Ajax({
+                url: '/SubmitIdea/SearchSubmitIdeas',
+                type: 'POST',
+                data: JSON.stringify(submitIdeaSearch),
+                contentType: 'application/json',
+                accept: 'application/json'
+            })
+            ajax.send()
+            ajax.onSuccess = function (data) {
+                grid.dataSource = JSON.parse(data)
+                grid.hideSpinner();
+            }
+
+        }
+
+        //btn search events
+         document.getElementById("btnSearch").addEventListener('click', function () {
+
+            let grid = document.getElementById("listSubmitIdea").ej2_instances[0]
+
+            var title = document.getElementById("Title").ej2_instances[0];
+            var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+            var dateTo = document.getElementById("dateTo").ej2_instances[0];
+
+
+            title.value = title.value ==  null ? "" : title.value;
+            dateFrom.value = dateFrom.value ==  null ? dateFromInit : dateFrom.value;
+            dateTo.value = dateTo.value ==  null ? dateToInit : dateTo.value;
+
+            let submitIdeaSearch = {
+                DateFrom: dateFrom.value,
+                DateTo: dateTo.value,
+                Text:title.value,
+            }
+
+            grid.showSpinner()
+
+            var ajax = new ej.base.Ajax({
+                url: '/SubmitIdea/SearchSubmitIdeas',
+                type: 'POST',
+                data: JSON.stringify(submitIdeaSearch),
+                contentType: 'application/json',
+                accept: 'application/json'
+            })
+            ajax.send()
+            ajax.onSuccess = function (data) {
+                grid.dataSource = JSON.parse(data)
+                grid.hideSpinner();
+            }
+
+
+        });
+
+        //btnAdd events
+          document.getElementById("btnAdd").addEventListener('click', function () {
+ 
+            var dialog = document.getElementById("dialogSubmitSearch").ej2_instances[0]
+
+            dialog.show()
+
+            $("button.e-dlg-closeicon-btn.e-control.e-btn.e-lib.e-flat.e-icon-btn").click(function() {
+                document.getElementById("ideatitle").value = "";
+                document.getElementById("description").value = "";
+            });
+
+            document.getElementById("btnCancel").onclick = function (e) {
+                dialog.hide()
+                document.getElementById("ideatitle").value = "";
+                document.getElementById("description").value = "";
+            }
+
+            document.getElementById("btnSubmit").onclick = function (e) {
+
+                let ideatitle = document.getElementById("ideatitle").value;
+                let description = document.getElementById("description").value;
+
+                var uploadObj = document.getElementById("UploadFiles")
+
+                let ideaObject = {
+                            Title: ideatitle,
+                            Description: description 
+                        }
+                
+                $.ajax({
+                    url: '/SubmitIdea/Submit',
+                    type: 'POST',
+                    data: JSON.stringify(ideaObject),
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8',
+                        'Accept': 'application/json; charset=utf-8'
+                    },
+                    success: (result) => {
+
+                        dialog.hide()
+
+                        let grid = document.getElementById("listSubmitIdea").ej2_instances[0]
+
+                        var dateFromInit = new Date();
+                        dateFromInit.setDate(dateFromInit.getDate()-30);
+
+                        var dateToInit = new Date();
+                        dateToInit.setDate(dateToInit.getDate());
+                        
+                        var title = document.getElementById("Title").ej2_instances[0];
+                        var dateFrom = document.getElementById("dateFrom").ej2_instances[0];
+                        var dateTo = document.getElementById("dateTo").ej2_instances[0];
+            
+                        title.value = title.value ==  null ? "" : title.value;
+                        dateFrom.value = dateFrom.value ==  null ? dateFromInit : dateFrom.value;
+                        dateTo.value = dateTo.value ==  null ? dateToInit : dateTo.value;
+
+                        let submitIdeaSearch = {
+                            DateFrom: dateFrom.value,
+                            DateTo: dateTo.value,
+                            Title:title.value,
+                        }
+
+                        grid.showSpinner()
+
+                        var ajax = new ej.base.Ajax({
+                            url: '/SubmitIdea/SearchSubmitIdeas',
+                            type: 'POST',
+                            data: JSON.stringify(submitIdeaSearch),
+                            contentType: 'application/json',
+                            accept: 'application/json'
+                        })
+                        ajax.send()
+                        ajax.onSuccess = function (data) {
+                            grid.dataSource = JSON.parse(data)
+                            grid.hideSpinner();
+                        }
+
+                    },
+                    error: (error) => {
+                        alert("error");
+                    }
+                })
+            }
+
+
+        });
+
+    </script>
+
+      <style>
+
+        .e-grid .e-gridcontent { /* grid content color*/
+           margin-top: 0px;
+        }
+
+        .e-icon-settings {
+            color: gray;
+        }
+    </style>

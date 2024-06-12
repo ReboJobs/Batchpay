@@ -1,0 +1,53 @@
+﻿<div class="row">
+    <div class="col-md-6">
+        <ejs-dropdownlist id="ids" placeholder="Select Client Id">
+            <e-dropdownlist-fields text="clientId" value="clientId"></e-dropdownlist-fields>
+        </ejs-dropdownlist>
+    </div>
+    <div class="col-md-6">
+        <a class="nav-link text-dark">
+            <img onclick="connectToXero()" id="add" src="https://developer.xero.com/static/images/documentation/ConnectToXero2019/connect-blue.svg"></>
+        </a>
+    </div>
+</div>
+
+<div id="connectToXeroContainer">
+    <ejs-dialog id='connectToXeroDialog' isModal="true" width="300px"
+                header="<div class='dlg-template e-icon-settings'>MESSAGE</div>"
+                showCloseIcon="true" created="modalCreated"
+                overlayClick="onOverlayClick"
+                target="#connectToXeroContainer">
+        <e-content-template>
+            <p>Select Client Id to proceed</p>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<script>
+    var dialogObj;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        operations.getClientApps()
+    })
+
+    function modalCreated() {
+        dialogObj = this;
+        dialogObj.hide();
+    }
+
+    function connectToXero() {
+        let clientId = $("#ids").val()
+
+        if (clientId == '') {
+            var dialog = document.getElementById("connectToXeroDialog").ej2_instances[0];
+            dialog.show();
+        } else {
+            location.href = `/Authorization/Index/${clientId}`
+        }
+    }
+
+    function onOverlayClick() {
+        var dialog = document.getElementById("dialog").ej2_instances[0];
+        dialog.hide();
+    }
+</script>

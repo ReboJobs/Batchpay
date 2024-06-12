@@ -1,0 +1,147 @@
+﻿@using System.Security.Principal
+@using XeroApp.Extensions
+
+@if (ViewBag.firstTimeConnection)
+{
+    <div class="collapse navbar-collapse" id="navbarColor01">
+        <form class="d-flex">
+            @if (ViewBag.OrgPickerTenantList != null)
+            {
+                <select name="orgSelector" id="orgSelector" class="form-select"  onchange="location.href = this.value">
+                    @foreach (var details in ViewBag.OrgPickerTenantList)
+                    {
+                        @if (details.TenantId == ViewBag.OrgPickerCurrentTenantId)
+                        {
+
+                            <option data-id="@details.TenantId" value="@Url.Action("Index", "Home", new { tenantId = @details.TenantId ,actionToRedirect = ViewBag.actionToRedirect,  controllerToRedirect = ViewBag.controllerToRedirect })" selected="selected">@details.TenantName</option>
+                        }
+                        else
+                        {
+                            <option data-id="@details.TenantId" value="@Url.Action("Index", "Home", new { tenantId = @details.TenantId ,actionToRedirect = ViewBag.actionToRedirect,  controllerToRedirect = ViewBag.controllerToRedirect })">@details.TenantName</option>
+
+                        }
+                    }
+                </select>
+            }
+        </form>
+        <ul class="navbar-nav me-auto">
+
+             <li class="nav-item">
+                <a class="nav-link " id="btnConnection" onclick="SwitchLocation()" ><img src="~/img/connect-white.svg" alt=""></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " id="btnDisconnection" asp-action="Index" asp-controller="Xero"><img src="~/img/disconnect-white.svg" alt=""></a>
+            </li>
+        </ul>
+        <div class="btn-group" role="group">
+            <div class="collapse navbar-collapse" id="navbarColor02">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="UsernameAbbv" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"></a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="@Url.Action("OrganisationSettings","OrganisationInfo")"><i class="bi bi-gear"></i> &nbsp; Org Settings</a>
+                            <a class="dropdown-item" href="@Url.Action("Index","SubmitIdea")"><i class="bi bi-gear"></i> &nbsp; Submit Idea</a>
+                            <a class="dropdown-item" href="@Url.Action("Index","ReportBug")"><i class="bi bi-gear"></i> &nbsp; Report Bug</a>
+                            <a class="dropdown-item" href="@Url.Action("Index","XeroApiLogs")"><i class="bi bi-gear"></i> &nbsp; Xero Api Logs</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" id="btnSignout" href="#"><i class="bi bi-lock-fill"></i>Log out</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+}
+
+<script>
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+   
+
+        var newWindow;
+        document.getElementById("btnSignout").onclick = function(e) {
+            // Fixes dual-screen position
+            var w = 450;
+            var h = 650;
+            var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+            var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+            var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+            var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+            var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+            var top = ((height / 2) - (h / 2)) + dualScreenTop;
+            newWindow = window.open("https://go.xero.com/logout", "Disconnect Xero", 'toolbar=no,scrollbars=no,resizable=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+            newWindow.onunload = function(e) {
+                var timer = setInterval(function() {
+                    if (newWindow.closed) {
+                        clearInterval(timer);
+                        window.location = "@Url.Action("Disconnect" , "Authorization")"
+                    }
+                }, 1000);
+            };
+
+            if (window.focus) {
+                newWindow.focus();
+            }
+
+        }
+
+        getUserNameAbbv()
+
+    })
+
+
+
+    function getUserNameAbbv() {
+
+        $.ajax({
+            url: '/Home/getUserNameAbbv',
+            type: 'GET',
+            headers: {
+                'Accept': 'application/json; charset=utf-8'
+            },
+            success: (result) => {
+            
+                $("#UsernameAbbv").text(result)
+ 
+            },
+            error: (error) => console.log(error)
+        })
+
+    }
+
+    function SwitchLocation() {
+        let browser = detectBrowser();
+
+        location.href = `/Authorization/Index/${browser}`
+
+    }
+
+    function detectBrowser() {
+
+        let userAgent = navigator.userAgent;
+        var browser = "";
+
+        if (userAgent.match(/edg/i)) {
+            browser = "edge";
+        } else if (userAgent.match(/firefox|fxios/i)) {
+            browser = "firefox";
+        } else if (userAgent.match(/opr\//i)) {
+            browser = "opera";
+        } else if (userAgent.match(/chrome|chromium|crios/i)) {
+            browser = "chrome";
+        } else if (userAgent.match(/safari/i)) {
+            browser = "safari";
+        } else {
+            alert("Other browser");
+        }
+
+        return browser;
+
+    }
+
+</script>

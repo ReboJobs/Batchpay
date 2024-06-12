@@ -1,0 +1,54 @@
+﻿<div class="row">
+    <div class="col-md-6">
+        <ejs-dropdownlist id="Disconnectids" placeholder="Tenant">
+            <e-dropdownlist-fields text="tenantName" value="tenantId"></e-dropdownlist-fields>
+        </ejs-dropdownlist>
+    </div>
+    <div class="col-md-6">
+        <a class="nav-link text-dark">
+            
+            <img onclick="DisconnectToXero()" id="DisconnectTenant" src="https://developer.xero.com/static/images/documentation/ConnectToXero2019/disconnect-blue.svg"></>
+        </a>
+    </div>
+</div>
+
+<div id="DisconnectToXeroContainer">
+    <ejs-dialog id='DisconnectToXeroDialog' isModal="true" width="300px"
+                header="<div class='dlg-template e-icon-settings'>MESSAGE</div>"
+                showCloseIcon="true" created="modalCreated"
+                overlayClick="onOverlayClick"
+                target="#DisconnectToXeroContainer">
+        <e-content-template>
+            <p>Select Tenant to proceed</p>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<script>
+    var dialogObj;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        operations.getConnectedTenant()
+    })
+
+    function modalCreated() {
+        dialogObj = this;
+        dialogObj.hide();
+    }
+
+    function DisconnectToXero() {
+        let tenantId = document.getElementById("Disconnectids").ej2_instances[0].itemData.tenantId;
+
+        if (tenantId == '') {
+            var dialog = document.getElementById("DisconnectToXeroDialog").ej2_instances[0];
+            dialog.show();
+        } else {
+            location.href = `/Authorization/DisconnectTenant/${tenantId}`
+        }
+    }
+
+    function onOverlayClick() {
+        var dialog = document.getElementById("dialog").ej2_instances[0];
+        dialog.hide();
+    }
+</script>

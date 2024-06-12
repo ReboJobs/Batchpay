@@ -1,0 +1,250 @@
+﻿@using Syncfusion.EJ2.QueryBuilder;
+@{
+
+    var Modalanimation = new Syncfusion.EJ2.Popups.DialogAnimationSettings { Effect = Syncfusion.EJ2.Popups.DialogEffect.None };
+
+
+
+    //var listOfColumnNameDropDown = new List<object>();
+    //listOfColumnNameDropDown.Add(new { columnNameText = "Ref", columnNameValue = "invoiceNumber" });
+    //listOfColumnNameDropDown.Add(new { columnNameText = "Contact", columnNameValue = "contact.name" });
+    //listOfColumnNameDropDown.Add(new { columnNameText = "Date", columnNameValue = "date" });
+    //listOfColumnNameDropDown.Add(new { columnNameText = "DueDate", columnNameValue = "dueDate" });
+    //listOfColumnNameDropDown.Add(new { columnNameText = "Paid", columnNameValue = "amountPaid" });
+    //listOfColumnNameDropDown.Add(new { columnNameText = "Due", columnNameValue = "amountDue" });
+    //listOfColumnNameDropDown.Add(new { columnNameText = "PayNow", columnNameValue = "amountDueEditable" });
+    //listOfColumnNameDropDown.Add(new { columnNameText = "Status", columnNameValue = "status" });
+
+    //var DropDownListColumnNameParam = new Syncfusion.EJ2.DropDowns.DropDownList() { DataSource = listOfColumnNameDropDown, Query = "new ej.data.Query()", AllowFiltering = true, Fields = new Syncfusion.EJ2.DropDowns.DropDownListFieldSettings() { Value = "columnNameText", Text = "columnNameValue" }, ActionComplete = "actionComplete" };
+
+    var listOfSortTypeDropDown = new List<object>();
+    listOfSortTypeDropDown.Add(new { sortTypeText = "Ascending", sortTypeValue = "Ascending" });
+    listOfSortTypeDropDown.Add(new { sortTypeText = "Descending", sortTypeValue = "Descending" });
+
+
+    var DropDownListSortTypeeParam = new Syncfusion.EJ2.DropDowns.DropDownList() { DataSource = listOfSortTypeDropDown, Query = "new ej.data.Query()", AllowFiltering = true, Fields = new Syncfusion.EJ2.DropDowns.DropDownListFieldSettings() { Value = "sortTypeText", Text = "sortTypeValue" }, ActionComplete = "actionComplete" };
+
+    var sortbutton = new
+    {
+        content = "Ok",
+        isPrimary = true
+    };
+
+    var Cancelbutton = new
+    {
+        content = "Cancel",
+        isPrimary = true
+    };
+
+}
+<div class=" col-lg-12 control-section" id="target">
+    @*        <ejs-button id="dialogBtn" content="Open"></ejs-button>*@
+    <ejs-dialog id="modal_dialog" animationSettings="Modalanimation" width="800px" style="height:100%" target="#target" open="dialogOpen" close="dialogClose" header="Custom Sorting" isModal="true" created="modalCreated" closeOnEscape="false">
+        <e-content-template>
+            <ejs-grid id="GridSorting" style="margin-top:115px;" toolbar="@(new List<string>() { "Add","Delete", "Update", "Cancel" })" allowPaging="true" actionBegin="actionBegin">
+                <e-grid-editSettings allowAdding="true" allowDeleting="true" allowEditing="true" newRowPosition="Bottom"></e-grid-editSettings>
+                <e-grid-pagesettings pageCount="5"></e-grid-pagesettings>
+                <e-grid-columns>
+                    @*     <e-grid-column field="ColumnName"  headerText="Column Name" editType="dropdownedit" edit="@(new {@params = DropDownListColumnNameParam , @create="createColumnName"   })"  width="150"></e-grid-column>*@
+                    <e-grid-column field="ColumnName" headerText="Column Name" editType="dropdownedit" validationRules="@(new { required=true})" edit="@(new {@create="createColumnName", @read="readColumnName" , @destroy="destroyColumnName" , @write="writeColumnName"  })" width="150"></e-grid-column>
+                    <e-grid-column field="SortType" headerText="Sort By" editType="dropdownedit" edit="new {@params = DropDownListSortTypeeParam  }" create="" width="150"></e-grid-column>
+                    <e-grid-column field="OrderNo" headerText="Order No" editType="dropdownedit" validationRules="@(new { required=true})" edit="@(new {@create="createOrderNo", @read="readcreateOrderNo" , @destroy="destroycreateOrderNo" , @write="writecreateOrderNo"  })" width="150"></e-grid-column>
+                    @* <e-grid-column field="OrderNo" headerText="Order No" editType="intedit" displayAsCheckBox="true" type="int" width="100"></e-grid-column>*@
+                </e-grid-columns>
+            </ejs-grid>
+        </e-content-template>
+        <e-dialog-buttons>
+            <e-dialog-dialogbutton buttonModel="sortbutton" click="dlgButtonSortClick"></e-dialog-dialogbutton>
+            <e-dialog-dialogbutton buttonModel="Cancelbutton" click="dlgButtonCancelClick"></e-dialog-dialogbutton>
+        </e-dialog-buttons>
+    </ejs-dialog>
+</div>
+<div class="col-lg-4 property-section">
+</div>
+
+
+<style>
+    #target .control-wrapper {
+        margin: 0px;
+    }
+
+</style>
+
+<script>
+    var dialogObj;
+    var ColumnNameElem
+    var ColumnNameObj
+    var ColumnNameSelected = []
+
+    var OrderNoElem
+    var OrderNoObj
+    var OrderNoSelected = []
+
+    var ColumnName = [
+        { columnNameText: 'Ref', columnNameValue: 'invoiceNumber' },
+        { columnNameText: 'Contact', columnNameValue: 'contact.name' },
+        { columnNameText: 'Date', columnNameValue: 'date' },
+        { columnNameText: 'DueDate', columnNameValue: 'dueDate' },
+        { columnNameText: 'Paid', columnNameValue: 'amountPaid' },
+        { columnNameText: 'Due', columnNameValue: 'amountDue' },
+        { columnNameText: 'PayNow', columnNameValue: 'amountDueEditable' },
+        { columnNameText: 'Status', columnNameValue: 'status' }
+    ];
+
+    var OrderNo = [
+        { OrderNoText: '1', OrderNoValue: 1 },
+        { OrderNoText: '2', OrderNoValue: 2 },
+        { OrderNoText: '3', OrderNoValue: 3 },
+        { OrderNoText: '4', OrderNoValue: 4 },
+        { OrderNoText: '5', OrderNoValue: 5 },
+        { OrderNoText: '6', OrderNoValue: 6 },
+        { OrderNoText: '7', OrderNoValue: 7 },
+        { OrderNoText: '8', OrderNoValue: 8 }
+    ];
+
+    //var dialogBtn = document.getElementById('dialogBtn');
+    //dialogBtn.addEventListener('click', function () {
+    //    dialogObj.show();
+    //});
+    function modalCreated() {
+        dialogObj = this;
+    }
+    function onChange(args) {
+        if (args.checked) {
+            dialogObj.overlayClick = function() {
+                dialogObj.hide();
+            };
+        } else {
+            dialogObj.overlayClick = function() {
+                dialogObj.show();
+            };
+        }
+    }
+
+    function dialogClose() {
+        //dialogBtn.style.display = 'block';
+    }
+    function dialogOpen() {
+        //dialogBtn.style.display = 'none';
+    }
+
+    function compare(a, b) {
+        if (a.OrderNo > b.OrderNo) {
+            return 1;
+        } else if (a.OrderNo < b.OrderNo) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    function dlgButtonSortClick() {
+        var gridSorting = document.getElementById("GridSorting").ej2_instances[0]
+        var data = gridSorting.currentViewData.sort(compare);
+        var grid = document.getElementById("Grid").ej2_instances[0]
+        grid.clearSorting();
+        for (let i = 0; i < data.length; i++) {
+          var columnName = ColumnName.filter(c => c.columnNameText === data[i].ColumnName).shift()
+          grid.sortColumn(columnName.columnNameValue, data[i].SortType, true)
+
+        }  
+        ColumnNameSelected = []
+        OrderNoSelected = []
+        dialogObj.hide();
+    }
+    function dlgButtonCancelClick() {
+        dialogObj.hide();
+    }
+
+
+    function actionComplete() {
+        return false
+    }
+
+
+    function rowPositionChange(args) {
+        var grid = document.getElementById("GridSorting").ej2_instances[0];
+        grid.editSettings.newRowPosition = this.value;
+    }
+
+    function actionBegin(args) {
+        var grid = document.getElementById("GridSorting").ej2_instances[0];
+        if (args.requestType === 'save') {
+            if (grid.pageSettings.currentPage !== 1 && grid.editSettings.newRowPosition === 'Top') {
+                args.index = (grid.pageSettings.currentPage * grid.pageSettings.pageSize) - grid.pageSettings.pageSize;
+            } else if (grid.editSettings.newRowPosition === 'Bottom') {
+                args.index = (grid.pageSettings.currentPage * grid.pageSettings.pageSize) - 1;
+            }
+        }
+
+        if (args.requestType === 'delete') {
+            ColumnNameSelected.splice(ColumnNameSelected.findIndex(sel => sel === args.data[0].ColumnName), 1)
+            OrderNoSelected.splice(OrderNoSelected.findIndex(sel => sel === args.data[0].ColumnName), 1)
+        }
+    }
+
+
+    function createOrderNo() {
+        OrderNoElem = document.createElement('input');
+        return OrderNoElem
+    }
+
+    function readcreateOrderNo() {
+
+        OrderNoSelected.push(OrderNoObj.text)
+        return OrderNoObj.text
+    }
+
+    function destroycreateOrderNo() {
+
+        return OrderNoObj.destroy()
+    }
+
+    function writecreateOrderNo() {
+        var result = OrderNo.filter(c => OrderNoSelected.every(sel => sel !== c.OrderNoText))
+        OrderNoObj = new ej.dropdowns.DropDownList({
+            dataSource: result,
+            fields: { value: 'OrderNoValue', text: 'OrderNoText' },
+            change: function() {
+   
+            },
+            placeholder: '',
+            floatLabelType: 'Never'
+        })
+
+        return OrderNoObj.appendTo(OrderNoElem);
+    }
+
+
+    function createColumnName() {
+        ColumnNameElem = document.createElement('input');
+        return ColumnNameElem
+    }
+
+    function readColumnName() {
+
+        ColumnNameSelected.push(ColumnNameObj.text)
+        return ColumnNameObj.text
+    }
+
+    function destroyColumnName() {
+
+        return ColumnNameObj.destroy()
+    }
+
+    function writeColumnName() {
+        var result = ColumnName.filter(c => ColumnNameSelected.every(sel => sel !== c.columnNameText))
+        ColumnNameObj = new ej.dropdowns.DropDownList({
+            dataSource: result,
+            fields: { value: 'columnNameValue', text: 'columnNameText' },
+            change: function() {
+      
+            },
+            placeholder: '',
+            floatLabelType: 'Never'
+        })
+
+        return ColumnNameObj.appendTo(ColumnNameElem);
+    }
+
+</script>

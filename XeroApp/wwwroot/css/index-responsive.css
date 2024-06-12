@@ -1,0 +1,175 @@
+
+
+/* Smallest Devices */
+.batchpay-box {  margin-top: 80px;}
+.batchpay-box div { position: relative; }
+.batchpay-box div span {  margin: 0; position: absolute; top: 50%;  left: 50%; transform: translate(-50%, -50%);  height: 63px; width: 252px; }
+
+
+.fbox-blue { display:none; }
+.fbox-rainbow { display: none; }
+.fbox-lightgray { display: none; }
+
+
+
+/* For Design Blue */
+.batchpay-box .fbox-1 .box1.blue {
+    background-color: white;
+}
+    .batchpay-box .fbox-1 .box1.blue span {
+        background-image: url('/img/blue_template/batchpay_blue_box1_left.jpg');
+        background-repeat: no-repeat;
+    }
+    .batchpay-box .fbox-1 .box2.blue span {
+        background-image: url('/img/blue_template/batchpay_blue_box1_right.jpg');
+        background-repeat: no-repeat;
+    }
+
+    .batchpay-box .fbox-1 .box2.blue {
+        background-color: #00B8E9;
+    }
+
+.batchpay-box .fbox-2 .box1.blue span {
+    background-image: url('/img/blue_template/batchpay_blue_box2_center.jpg');
+    background-repeat: no-repeat;
+    display: block;
+    width: 522px;
+    height: 50px;
+}
+
+.fbox-2.blue {
+    background-color: #00B8E9;
+}
+
+
+.fbox-3.blue div {
+    margin-top: 12px;
+    background-image: url('/img/blue_template/batchpay_blue_bottom_image.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    height: 700px;
+}
+
+
+/* For Design LightGray */
+.batchpay-box .fbox-1 .box1.lightgray {
+    background-color: white;
+}
+
+    .batchpay-box .fbox-1 .box1.lightgray span {
+        background-image: url('/img/light_gray_template/batchpay_light_gray_box1_left.jpg');
+        background-repeat: no-repeat;
+    }
+
+    .batchpay-box .fbox-1 .box2.lightgray span {
+        background-image: url('/img/light_gray_template/batchpay_light_gray_box1_right.jpg');
+        background-repeat: no-repeat;
+    }
+
+    .batchpay-box .fbox-1 .box2.lightgray {
+        background-color: #969696;
+    }
+
+    .batchpay-box .fbox-2 .box1.lightgray span {
+        background-image: url('/img/light_gray_template/batchpay_light_gray_box2_center.jpg');
+        background-repeat: no-repeat;
+        display: block;
+        width: 522px;
+        height: 50px;
+    }
+
+
+.fbox-2.lightgray {
+    background-color: #969696;
+}
+
+
+.fbox-3.lightgray div {
+    margin-top: 12px;
+    background-image: url('/img/light_gray_template/batchpay_light_gray_bottom_image.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    height: 700px;
+}
+
+
+
+
+/* For Design Rainbow */
+.batchpay-box .fbox-1 .box1.rainbow {
+    background-color: white;
+}
+
+    .batchpay-box .fbox-1 .box1.rainbow span {
+        background-image: url('/img/rainbow_template/batchpay_rainbow_box1_left.jpg');
+        background-repeat: no-repeat;
+    }
+
+.batchpay-box .fbox-1 .box2.rainbow span {
+    background-image: url('/img/rainbow_template/batchpay_rainbow_box1_right.jpg');
+    background-repeat: no-repeat;
+}
+
+.batchpay-box .fbox-1 .box2.rainbow {
+    background-color: #969696;
+}
+
+.batchpay-box .fbox-2 .box1.rainbow span {
+    background-image: url('/img/rainbow_template/batchpay_rainbow_box2_center.jpg');
+    background-repeat: no-repeat;
+    display: block;
+    width: 522px;
+    height: 50px;
+}
+
+
+.fbox-2.rainbow {
+    background-color: #969696;
+}
+
+
+.fbox-3.rainbow div {
+    margin-top: 12px;
+    background-image: url('/img/rainbow_template/batchpay_rainbow_bottom_image.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    height: 700px;
+}
+
+
+
+
+/* Other Singles */
+.fbox-1 div { height: 800px; }
+.fbox-2 div {  margin-top: 12px; height: 500px; }
+.spacer-footer { padding: 10px; }
+.batchpay-box .fbox-2 { display: none; }
+.batchpay-box .fbox-3 {
+    display: none;
+}
+
+
+
+
+
+/* OTHER MEDIAS */
+
+@media (min-width: 576px) {
+    .batchpay-box .fbox-2 {display:block;}
+}
+
+@media (min-width: 768px) {
+
+}
+
+@media (min-width: 992px) {
+    .batchpay-box .fbox-3 {
+        display: block;
+    }
+}
+
+@media (min-width: 1200px) {
+}

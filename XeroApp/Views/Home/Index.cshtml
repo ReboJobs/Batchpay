@@ -1,0 +1,154 @@
+﻿@*@model XeroApp.Models.BusinessModels.AuthViewModel*@
+
+@{
+    //if (User.Identity.IsAuthenticated)
+    //{
+    //<h3>Welcome, @User.Identity.Name!</h3>
+    //<meta http-equiv="Refresh" content="0; url='/Xero/Index'" />
+
+    //}
+    //else
+    //{
+
+    //            /* Blue Template */
+    //<div class="batchpay-box container fbox-blue">
+    //            <div class="row fbox-1 blue">
+    //                <div class="col-md-6 box1 blue">
+    //                    <a onclick="SwitchLocation()";><span></span></a>
+    //                </div>
+    //                <div class="col-md-6 box2 blue">
+    //                    <a onclick="SwitchLocation()";><span></span></a>
+    //                </div>
+    //            </div>
+
+    //            <div class="row fbox-2 blue">
+    //                <div class="col-lg-12 blue box1">
+    //                    <a onclick="SwitchLocation()";><span></span></a>
+    //                </div>
+    //            </div>
+    //            <div class="row fbox-3 blue">
+    //                <div class="col-lg-12">
+    //                </div>
+    //            </div>
+    //            <div class="spacer-footer">&nbsp;</div>
+    //</div>
+
+    //            /* LightGray Template */
+    //<div class="batchpay-box container fbox-lightgray">
+    //            <div class="row fbox-1 lightgray">
+    //                <div class="col-md-6 box1 lightgray">
+    //                    <!--<a href="/home/signup"><span></span></a>-->
+    //                    <a onclick="SwitchLocation()";><span></span></a>
+    //                </div>
+    //                <div class="col-md-6 box2 lightgray">
+    //                     <!--<a href="/home/signup"><span></span></a>-->
+    //                   <a onclick="SwitchLocation()";><span></span></a>
+    //                </div>
+    //            </div>
+
+    //            <div class="row fbox-2 lightgray">
+    //                <div class="col-lg-12 lightgray box1">
+    //                     <!--<a href="/home/signup"><span></span></a>-->
+    //                    <a onclick="SwitchLocation();"><span></span></a>
+    //                </div>
+    //            </div>
+    //            <div class="row fbox-3 lightgray">
+    //                <div class="col-lg-12">
+    //                </div>
+    //            </div>
+    //            <div class="spacer-footer">&nbsp;</div>
+    //</div>
+
+    //    /* LightGray Template */
+    //<div class="batchpay-box container fbox-rainbow">
+    //            <div class="row fbox-1 rainbow">
+    //                <div class="col-md-6 box1 rainbow">
+    //                     <!--<a href="/home/signup"><span></span></a>-->
+    //                    <a onclick="SwitchLocation()";><span></span></a>
+    //                </div>
+    //                <div class="col-md-6 box2 rainbow">
+    //                    <!--<a href="/home/signup"><span></span></a>-->
+    //                    <a onclick="SwitchLocation()";><span></span></a>
+    //                </div>
+    //            </div>
+
+    //            <div class="row fbox-2 rainbow">
+    //                <div class="col-lg-12 rainbow box1">
+    //                    <!--<a href="/home/signup"><span></span></a>-->
+    //                    <a onclick="SwitchLocation()";><span></span></a>
+    //                </div>
+    //            </div>
+    //            <div class="row fbox-3 rainbow">
+    //                <div class="col-lg-12">
+    //                </div>
+    //            </div>
+    //            <div class="spacer-footer">&nbsp;</div>
+    //</div>
+
+
+    <!--
+    <div class="sub-content">
+    <div class="login-container">
+    <div class="row">
+    <div class="col-6 col-sm-6 col-lg-6 col-md-6">
+    <img alt="Welcome" src="/img/landing.png" width="80%" height="100%">
+    </div>
+    <div class="col-6 col-sm-6 col-lg-6 col-md-6">
+    Sign in with your existing corporate account:
+    <br>
+    <img alt="MS Logo" src="/img/microsoft-logo.png"
+    width="20%" height="30%">
+
+    <div class="row">
+    <div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <span data-xero-sso data-href="/home/signup" data-label="Sign up with Xero"></span>
+    <script src="https://edge.xero.com/platform/sso/xero-sso.js"></script>
+    </div>
+    </div>
+    <hr />
+    </div>
+    </div>
+    </div>
+    </div>
+    -->
+
+    <script src="https://edge.xero.com/platform/sso/xero-sso.js"></script>
+
+    <script>
+
+                function SwitchLocation() {
+                    let browser = detectBrowser();
+
+                    location.href = `/Authorization/Index/${browser}`
+                }
+
+                function detectBrowser() {
+            
+                        let userAgent = navigator.userAgent;
+                        var browser = "";
+
+                        if (userAgent.match(/edg/i)) {
+                            browser = "edge";
+                        } else if (userAgent.match(/firefox|fxios/i)) {
+                            browser = "firefox";
+                        } else if (userAgent.match(/opr\//i)) {
+                            browser = "opera";
+                        } else if (userAgent.match(/chrome|chromium|crios/i)) {
+                            browser = "chrome";
+                        } else if (userAgent.match(/safari/i)) {
+                            browser = "safari";
+                        } else {
+                            alert("Other browser");
+                        }
+
+                        return browser;
+            
+                }
+                
+    SwitchLocation();
+    </script>
+
+
+    }
+}

@@ -1,0 +1,167 @@
+﻿@model XeroApp.Models.BusinessModels.RemittanceAdviceModel
+
+
+<!DOCTYPE  html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <title>Remittance Advice from Demo Company (Global) 30Jun2022</title>
+      <style type="text/css"> * {margin:0; padding:0; text-indent:0; }
+         .s1 { color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 24pt; }
+         p { color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt; margin:0pt; }
+         h1 { color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: bold; text-decoration: none; font-size: 9pt; }
+         .s2 { color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: bold; text-decoration: none; font-size: 9pt; }
+         .s3 { color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt; }
+         .s4 { color: black; font-family:Calibri, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt; }
+         table, tbody {vertical-align: top; overflow: visible; }
+          * {
+              box-sizing: border-box;
+          }
+
+          /* Create two equal columns that floats next to each other */
+          .column {
+              float: left;
+              width: 32%;
+              padding: 10px;
+              height: 80px; /* Should be removed. Only for demonstration */
+          }
+
+          /* Clear floats after the columns */
+          .row:after {
+              content: "";
+              display: table;
+              clear: both;
+          }
+      </style>
+   </head>
+   <body>
+       <!--<p style="padding-left: 348pt;text-indent: 0pt;text-align: left;"><span><img width="284" height="68" alt="image" src="Remittance%20Advice%20from%20Demo%20Company%20%28Global%29%2030Jun2022_files/Image_001.jpg"/></span></p>-->
+       <p style="text-indent: 0pt;text-align: left;"><br /></p>
+       <p class="s1" style="padding-top: 1pt;padding-left: 5pt;text-indent: 0pt;text-align: left;">REMITTANCE ADVICE</p>
+       <div class="row">
+           <div class="column">
+               <p style="padding-top: 9pt;padding-left: 33pt;text-indent: 0pt;line-height: 118%;text-align: left;">@Model.Contact.Name </p>
+@*               <p style="padding-top: 9pt;padding-left: 33pt;text-indent: 0pt;line-height: 118%;text-align: left;">Young Bros Transport P O Box 5678</p>*@
+               <p style="padding-left: 33pt;text-indent: 0pt;line-height: 118%;text-align: left;">@Model.Contact.Addresses.FirstOrDefault().AddressLine1 &nbsp;&nbsp;  @Model.Contact.Addresses.FirstOrDefault().AddressLine2 </p>
+           </div>
+           <div class="column">
+               <h1 style="padding-top: 3pt;padding-left: 5pt;text-indent: 0pt;line-height: 11pt;text-align: center;">Payment Date</h1>
+               <p style="padding-left: 5pt;text-indent: 0pt;line-height: 11pt;text-align: center;">@Model.Invoices.FirstOrDefault().PaymentDate</p>
+           </div>
+           <div class="column">
+               <p style="padding-top: 4pt;padding-left: 13pt;text-indent: 0pt;line-height: 118%;text-align: left;">@Model.MyCompanyName</p>
+               <p style="padding-left: 13pt;text-indent: 0pt;line-height: 118%;text-align: left;">@Model.MyCompanyAddress1</p>
+               <p style="padding-left: 13pt;text-indent: 0pt;line-height: 118%;text-align: left;">@Model.MyCompanyAddress2  &nbsp;&nbsp; @Model.MyCompanyAddress3</p>
+           </div>
+       </div>
+       <div class="row">
+           <div class="column">
+           </div>
+           <div class="column">
+               <h1 style="padding-left: 5pt;text-indent: 0pt;line-height: 11pt;text-align: center;">Sent Date</h1>
+               <p style="padding-left: 5pt; text-indent: 0pt; line-height: 11pt; text-align: center;">@string.Format("{0:dd MMM yyyy}", Model.Invoices.FirstOrDefault().SendDate)</p>
+           </div>
+           <div class="column">
+
+           </div>
+       </div>
+       <div class="row">
+           <div class="column">
+           </div>
+           <div class="column">
+               <h1 style="padding-left: 5pt;text-indent: 0pt;line-height: 11pt;text-align: center;">Tax reg</h1>
+               <p style="padding-left: 5pt;text-indent: 0pt;line-height: 11pt;text-align: center;">@Model.Contact.TaxNumber</p>
+           </div>
+           <div class="column">
+
+           </div>
+       </div>
+
+
+
+
+       <p style="text-indent: 0pt;text-align: left;"><br /></p>
+           <div class="row">
+           <div class="column">
+           </div>
+           <div class="column">
+     
+           </div>
+           <div class="column">
+                <h1 style="padding-top: 7pt;padding-left: 5pt;text-indent: 0pt;text-align: left;">Total @Model.Total</h1>
+                <p style="text-indent: 0pt;text-align: left;"><br /></p>
+           </div>
+       </div>
+       <p style="text-indent: 0pt;text-align: left;"><br /></p>
+       <p style="text-indent: 0pt;text-align: left;"><br /></p>
+       <table style="border-collapse:collapse;margin-left:5.344pt" cellspacing="0">
+           <tr style="height:13pt">
+               <td style="width:65pt;border-bottom-style:solid;border-bottom-width:1pt">
+                   <p class="s2" style="text-indent: 0pt;line-height: 9pt;text-align: left;">Invoice Date</p>
+               </td>
+               <td style="width:106pt;border-bottom-style:solid;border-bottom-width:1pt">
+                   <p class="s2" style="padding-left: 18pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Reference</p>
+               </td>
+               <td style="width:147pt;border-bottom-style:solid;border-bottom-width:1pt">
+                   <p class="s2" style="padding-left: 50pt;text-indent: 0pt;line-height: 9pt;text-align: left;">Payment Reference</p>
+               </td>
+               <td style="width:88pt;border-bottom-style:solid;border-bottom-width:1pt">
+                   <p class="s2" style="padding-right: 17pt;text-indent: 0pt;line-height: 9pt;text-align: right;">Invoice Total</p>
+               </td>
+               <td style="width:88pt;border-bottom-style:solid;border-bottom-width:1pt">
+                   <p class="s2" style="padding-right: 21pt;text-indent: 0pt;line-height: 9pt;text-align: right;">Amount Paid</p>
+               </td>
+               <td style="width:61pt;border-bottom-style:solid;border-bottom-width:1pt">
+                   <p class="s2" style="text-indent: 0pt;line-height: 9pt;text-align: right;">Still Owing</p>
+               </td>
+           </tr>
+
+           @foreach (var item in Model.Invoices)
+        {
+            decimal? stillOwning = item.AmountDue - item.AmountDueEditable;
+
+            <tr style="height:17pt">
+                   <td style="width:65pt;border-top-style:solid;border-top-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#CCCCCC">
+                       <p class="s3" style="padding-top: 2pt;text-indent: 0pt;text-align: left;">@item.Date</p>
+                   </td>
+                   <td style="width:106pt;border-top-style:solid;border-top-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#CCCCCC">
+                       <p style="text-indent: 0pt;text-align: left;">@item.Reference</p>
+                   </td>
+                   <td style="width:147pt;border-top-style:solid;border-top-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#CCCCCC">
+                       <p class="s3" style="padding-top: 2pt;padding-left: 50pt;text-indent: 0pt;text-align: left;">@item.InvoiceNumber</p>
+                   </td>
+                   <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#CCCCCC">
+                       <p class="s3" style="padding-top: 2pt;padding-right: 17pt;text-indent: 0pt;text-align: right;">@item.AmountDue</p>
+                   </td>
+                   <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#CCCCCC">
+                       <p class="s3" style="padding-top: 2pt;padding-right: 21pt;text-indent: 0pt;text-align: right;">@item.AmountDueEditable</p>
+                   </td>
+                   <td style="width:61pt;border-top-style:solid;border-top-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#CCCCCC">
+                       <p class="s3" style="padding-top: 2pt;text-indent: 0pt;text-align: right;">@stillOwning</p>
+                   </td>
+               </tr>
+           }
+
+           <tr style="height:17pt">
+               <td style="width:65pt;border-top-style:solid;border-top-width:1pt;border-top-color:#CCCCCC">
+                   <p style="text-indent: 0pt;text-align: left;"><br /></p>
+               </td>
+               <td style="width:106pt;border-top-style:solid;border-top-width:1pt;border-top-color:#CCCCCC">
+                   <p style="text-indent: 0pt;text-align: left;"><br /></p>
+               </td>
+               <td style="width:147pt;border-top-style:solid;border-top-width:1pt;border-top-color:#CCCCCC">
+                   <p style="text-indent: 0pt;text-align: left;"><br /></p>
+               </td>
+               <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#CCCCCC">
+                   <p class="s2" style="padding-top: 1pt;padding-right: 17pt;text-indent: 0pt;text-align: right;">Total</p>
+               </td>
+               <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#CCCCCC">
+                   <p class="s2" style="padding-top: 1pt;padding-right: 21pt;text-indent: 0pt;text-align: right;">@Model.Total</p>
+               </td>
+               <td style="width:61pt;border-top-style:solid;border-top-width:1pt;border-top-color:#CCCCCC">
+                   <p class="s2" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">@Model.StillOwning</p>
+               </td>
+           </tr>
+       </table>
+   </body>
+</html>
