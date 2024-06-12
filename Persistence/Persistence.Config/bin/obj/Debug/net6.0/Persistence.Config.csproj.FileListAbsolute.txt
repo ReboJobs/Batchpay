@@ -1,0 +1,17 @@
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\bin\Debug\net6.0\Persistence.Config.deps.json
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\bin\Debug\net6.0\Persistence.Config.runtimeconfig.json
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\bin\Debug\net6.0\Persistence.Config.dll
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\bin\Debug\net6.0\Persistence.Config.pdb
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\bin\Debug\net6.0\Core.Models.dll
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\bin\Debug\net6.0\Core.Models.pdb
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\obj\Debug\net6.0\Persistence.Config.csproj.AssemblyReference.cache
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\obj\Debug\net6.0\Persistence.Config.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\obj\Debug\net6.0\Persistence.Config.AssemblyInfoInputs.cache
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\obj\Debug\net6.0\Persistence.Config.AssemblyInfo.cs
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\obj\Debug\net6.0\Persistence.Config.csproj.CoreCompileInputs.cache
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\obj\Debug\net6.0\Persistence.Config.csproj.CopyComplete
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\obj\Debug\net6.0\Persistence.Config.dll
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\obj\Debug\net6.0\refint\Persistence.Config.dll
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\obj\Debug\net6.0\Persistence.Config.pdb
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\obj\Debug\net6.0\Persistence.Config.genruntimeconfig.cache
+C:\Users\Rebo\source\repos\Batch Pay\Persistence\Persistence.Config\obj\Debug\net6.0\ref\Persistence.Config.dll
