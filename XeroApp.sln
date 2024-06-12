@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XeroApp", "XeroApp\XeroApp.csproj", "{C63DAF0B-097C-4094-A32A-2FB9F55BDC68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{668D1A2E-4B36-4075-84E3-9F21BE2FBA0A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Models", "Core\Core.Models\Core.Models.csproj", "{DBC0B0E3-BB53-44AE-9BBA-A7494A83E14B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence", "{C7A7CFEE-30BC-42A4-AAB9-7D24DD74E1B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence.Config", "Persistence\Persistence.Config\Persistence.Config.csproj", "{01A914B7-A3E8-4115-9C6D-02B47AA6385D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accounts", "Accounts", "{68AAAD09-A3BC-4C8F-A57B-627094E36BCA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accounts.Config", "Accounts\Accounts.Config\Accounts.Config.csproj", "{A0B2A326-EA08-4FA7-BECB-0C571D72B5A7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C2846FA-DA18-4406-A504-C9F15159AC83}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C63DAF0B-097C-4094-A32A-2FB9F55BDC68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C63DAF0B-097C-4094-A32A-2FB9F55BDC68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C63DAF0B-097C-4094-A32A-2FB9F55BDC68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C63DAF0B-097C-4094-A32A-2FB9F55BDC68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBC0B0E3-BB53-44AE-9BBA-A7494A83E14B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBC0B0E3-BB53-44AE-9BBA-A7494A83E14B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBC0B0E3-BB53-44AE-9BBA-A7494A83E14B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBC0B0E3-BB53-44AE-9BBA-A7494A83E14B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01A914B7-A3E8-4115-9C6D-02B47AA6385D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01A914B7-A3E8-4115-9C6D-02B47AA6385D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01A914B7-A3E8-4115-9C6D-02B47AA6385D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01A914B7-A3E8-4115-9C6D-02B47AA6385D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0B2A326-EA08-4FA7-BECB-0C571D72B5A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0B2A326-EA08-4FA7-BECB-0C571D72B5A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0B2A326-EA08-4FA7-BECB-0C571D72B5A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0B2A326-EA08-4FA7-BECB-0C571D72B5A7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DBC0B0E3-BB53-44AE-9BBA-A7494A83E14B} = {668D1A2E-4B36-4075-84E3-9F21BE2FBA0A}
+		{01A914B7-A3E8-4115-9C6D-02B47AA6385D} = {C7A7CFEE-30BC-42A4-AAB9-7D24DD74E1B0}
+		{A0B2A326-EA08-4FA7-BECB-0C571D72B5A7} = {68AAAD09-A3BC-4C8F-A57B-627094E36BCA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D30E264-3260-4CDA-A7EA-AAA75BB7B07F}
+	EndGlobalSection
+EndGlobal

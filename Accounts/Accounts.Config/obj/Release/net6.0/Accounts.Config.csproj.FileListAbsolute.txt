@@ -1,0 +1,12 @@
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\bin\Release\net6.0\Accounts.Config.deps.json
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\bin\Release\net6.0\Accounts.Config.dll
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\bin\Release\net6.0\Accounts.Config.pdb
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\obj\Release\net6.0\Accounts.Config.csproj.AssemblyReference.cache
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\obj\Release\net6.0\Accounts.Config.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\obj\Release\net6.0\Accounts.Config.AssemblyInfoInputs.cache
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\obj\Release\net6.0\Accounts.Config.AssemblyInfo.cs
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\obj\Release\net6.0\Accounts.Config.csproj.CoreCompileInputs.cache
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\obj\Release\net6.0\Accounts.Config.dll
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\obj\Release\net6.0\refint\Accounts.Config.dll
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\obj\Release\net6.0\Accounts.Config.pdb
+C:\Users\Rebo\source\repos\Batch Pay\Accounts\Accounts.Config\obj\Release\net6.0\ref\Accounts.Config.dll
